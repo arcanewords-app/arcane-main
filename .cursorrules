@@ -1,0 +1,82 @@
+# Arcane Project Rules
+
+## Project Context
+
+This is **Arcane** - an AI-powered novel translator (EN → RU) built with TypeScript/Node.js.
+
+### Documentation Location
+
+All project documentation is in `/docs/` folder. **Always consult these files first:**
+
+- `docs/README.md` - Project overview and architecture
+- `docs/engine.md` - TranslationPipeline, NovelAgent, stages
+- `docs/reader.md` - Web UI, server, configuration
+- `docs/api.md` - REST API endpoints
+- `docs/prompts.md` - System prompts for 3-stage pipeline
+- `docs/glossary.md` - Russian declensions and glossary
+- `docs/types.md` - TypeScript types reference
+
+### Architecture
+
+```
+arcane/                    # Monorepo root (npm workspaces)
+├── arcane-engine/         # Translation engine (library)
+│   └── src/
+│       ├── pipeline/      # TranslationPipeline
+│       ├── stages/        # 3 translation stages
+│       ├── agents/        # NovelAgent
+│       ├── prompts/       # System prompts
+│       ├── glossary/      # Declensions (Petrovich)
+│       └── providers/     # LLM providers (OpenAI)
+│
+└── arcane-reader/         # Web UI + API server
+    ├── public/            # Static files
+    └── src/
+        ├── server.ts      # Express server
+        ├── services/      # Engine integration
+        └── storage/       # LowDB database
+```
+
+### Key Concepts
+
+1. **3-Stage Pipeline**: Analyze → Translate → Edit
+2. **NovelAgent**: Maintains context across chapters
+3. **Glossary**: Consistent name translations with Russian declensions
+4. **Petrovich**: Library for Russian name declensions
+
+### Code Conventions
+
+- Language: TypeScript (strict mode)
+- Module system: ESM (`"type": "module"`)
+- UI text: Russian (интерфейс на русском)
+- Code comments: English
+- Database: LowDB (JSON file)
+
+### Commands
+
+```bash
+# From monorepo root
+npm install          # Install all dependencies
+npm run build        # Build arcane-engine
+npm run dev          # Start development server
+
+# From arcane-reader
+npm run dev          # Start dev server with hot reload
+```
+
+### Environment
+
+Configuration in `arcane-reader/.env`:
+- `OPENAI_API_KEY` - Required for translation
+- `OPENAI_MODEL` - Default: gpt-4-turbo-preview
+- `PORT` - Default: 3000
+
+## Guidelines for AI Assistant
+
+1. **Read docs first** - Before making changes, check relevant documentation
+2. **Update docs** - When adding features, update corresponding doc files
+3. **Russian UI** - All user-facing text should be in Russian
+4. **English code** - Variables, functions, comments in English
+5. **Use engine** - Prefer using arcane-engine exports over reimplementing
+6. **Type safety** - Always use proper TypeScript types from types.md
+

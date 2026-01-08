@@ -1,0 +1,25 @@
+{
+  "name": "arcane",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI Novel Translator - Monorepo",
+  "workspaces": [
+    "arcane-engine",
+    "arcane-reader"
+  ],
+  "scripts": {
+    "build": "npm run build -w arcane-engine",
+    "dev": "npm run dev -w arcane-reader",
+    "start": "npm run start -w arcane-reader",
+    "install:all": "npm install"
+  },
+  "keywords": [
+    "ai",
+    "translation",
+    "novel",
+    "monorepo"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+

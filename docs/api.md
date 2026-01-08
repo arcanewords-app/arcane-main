@@ -1,0 +1,361 @@
+# 🔗 REST API Reference
+
+Arcane Reader предоставляет REST API для управления проектами и переводами.
+
+**Base URL:** `http://localhost:3000`
+
+---
+
+## 📊 Status
+
+### GET /api/status
+
+Проверка состояния сервера и AI провайдера.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-01-08T12:00:00.000Z",
+  "ai": {
+    "provider": "OpenAI",
+    "model": "gpt-4-turbo-preview",
+    "configured": true
+  },
+  "database": {
+    "type": "lowdb",
+    "projects": 3
+  }
+}
+```
+
+---
+
+## 📁 Projects
+
+### GET /api/projects
+
+Получить список всех проектов.
+
+**Response:**
+```json
+[
+  {
+    "id": "abc123xyz",
+    "name": "My Novel",
+    "sourceLanguage": "en",
+    "targetLanguage": "ru",
+    "chapters": [...],
+    "glossary": [...],
+    "createdAt": "2026-01-08T10:00:00.000Z",
+    "updatedAt": "2026-01-08T12:00:00.000Z"
+  }
+]
+```
+
+---
+
+### POST /api/projects
+
+Создать новый проект.
+
+**Request:**
+```json
+{
+  "name": "New Novel",
+  "sourceLanguage": "en",
+  "targetLanguage": "ru"
+}
+```
+
+**Response:** `201 Created`
+```json
+{
+  "id": "def456uvw",
+  "name": "New Novel",
+  "sourceLanguage": "en",
+  "targetLanguage": "ru",
+  "chapters": [],
+  "glossary": [],
+  "settings": {
+    "model": "gpt-4-turbo-preview",
+    "temperature": 0.7,
+    "skipEditing": false
+  },
+  "createdAt": "2026-01-08T14:00:00.000Z",
+  "updatedAt": "2026-01-08T14:00:00.000Z"
+}
+```
+
+---
+
+### GET /api/projects/:id
+
+Получить проект по ID.
+
+**Response:**
+```json
+{
+  "id": "abc123xyz",
+  "name": "My Novel",
+  ...
+}
+```
+
+**Errors:**
+- `404` — Project not found
+
+---
+
+### DELETE /api/projects/:id
+
+Удалить проект.
+
+**Response:** `200 OK`
+```json
+{
+  "success": true
+}
+```
+
+---
+
+## 📖 Chapters
+
+### POST /api/projects/:id/chapters
+
+Добавить главу в проект.
+
+**Request:**
+```json
+{
+  "title": "Chapter 1: The Beginning",
+  "originalText": "It was a dark and stormy night..."
+}
+```
+
+**Response:** `201 Created`
+```json
+{
+  "id": "ch_001",
+  "number": 1,
+  "title": "Chapter 1: The Beginning",
+  "originalText": "It was a dark and stormy night...",
+  "status": "pending"
+}
+```
+
+---
+
+### POST /api/projects/:projectId/chapters/upload
+
+Загрузить главу из файла (multipart/form-data).
+
+**Form fields:**
+- `file` — .txt файл с текстом главы
+- `title` (optional) — название главы
+
+**Response:** `201 Created`
+```json
+{
+  "id": "ch_002",
+  "number": 2,
+  "title": "chapter-2.txt",
+  "originalText": "...",
+  "status": "pending"
+}
+```
+
+---
+
+### GET /api/projects/:projectId/chapters/:chapterId
+
+Получить главу.
+
+**Response:**
+```json
+{
+  "id": "ch_001",
+  "number": 1,
+  "title": "Chapter 1",
+  "originalText": "...",
+  "translatedText": "...",
+  "status": "completed",
+  "translationMeta": {
+    "tokensUsed": 2840,
+    "duration": 12345,
+    "model": "gpt-4-turbo-preview",
+    "translatedAt": "2026-01-08T12:00:00.000Z"
+  }
+}
+```
+
+---
+
+### POST /api/projects/:projectId/chapters/:chapterId/translate
+
+Запустить перевод главы.
+
+**Response:** `200 OK`
+```json
+{
+  "status": "started",
+  "chapterId": "ch_001"
+}
+```
+
+Перевод выполняется асинхронно. Проверяйте статус главы через GET.
+
+**Statuses:**
+- `pending` — ожидает перевода
+- `translating` — в процессе
+- `completed` — завершён
+- `error` — ошибка
+
+---
+
+## 📚 Glossary
+
+### GET /api/projects/:id/glossary
+
+Получить глоссарий проекта.
+
+**Response:**
+```json
+[
+  {
+    "id": "gl_001",
+    "type": "character",
+    "original": "John",
+    "translated": "Джон",
+    "gender": "male",
+    "declensions": {
+      "nominative": "Джон",
+      "genitive": "Джона",
+      "dative": "Джону",
+      "accusative": "Джона",
+      "instrumental": "Джоном",
+      "prepositional": "Джоне"
+    }
+  },
+  {
+    "id": "gl_002",
+    "type": "location",
+    "original": "Crystal Palace",
+    "translated": "Хрустальный дворец"
+  },
+  {
+    "id": "gl_003",
+    "type": "term",
+    "original": "mana",
+    "translated": "мана",
+    "notes": "магическая энергия"
+  }
+]
+```
+
+---
+
+### POST /api/projects/:id/glossary
+
+Добавить запись в глоссарий.
+
+**Request:**
+```json
+{
+  "type": "character",
+  "original": "Alexander",
+  "translated": "Александр",
+  "gender": "male",
+  "notes": "главный герой"
+}
+```
+
+> **Авто-склонения**: Если `type: "character"` и `declensions` не указаны,
+> система автоматически сгенерирует падежные формы.
+
+**Response:** `201 Created`
+```json
+{
+  "id": "gl_004",
+  "type": "character",
+  "original": "Alexander",
+  "translated": "Александр",
+  "gender": "male",
+  "declensions": {
+    "nominative": "Александр",
+    "genitive": "Александра",
+    "dative": "Александру",
+    "accusative": "Александра",
+    "instrumental": "Александром",
+    "prepositional": "Александре"
+  },
+  "notes": "главный герой"
+}
+```
+
+---
+
+### DELETE /api/projects/:projectId/glossary/:entryId
+
+Удалить запись из глоссария.
+
+**Response:** `200 OK`
+```json
+{
+  "success": true
+}
+```
+
+---
+
+## 🔧 Error Responses
+
+Все ошибки возвращаются в формате:
+
+```json
+{
+  "error": "Error message description"
+}
+```
+
+### HTTP Status Codes
+
+| Code | Meaning |
+|------|---------|
+| 200 | OK |
+| 201 | Created |
+| 400 | Bad Request |
+| 404 | Not Found |
+| 500 | Internal Server Error |
+
+---
+
+## 📝 Примеры с curl
+
+### Создать проект
+```bash
+curl -X POST http://localhost:3000/api/projects \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Test Novel"}'
+```
+
+### Добавить главу
+```bash
+curl -X POST http://localhost:3000/api/projects/{id}/chapters \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Chapter 1", "originalText": "Hello world..."}'
+```
+
+### Запустить перевод
+```bash
+curl -X POST http://localhost:3000/api/projects/{projectId}/chapters/{chapterId}/translate
+```
+
+### Добавить персонажа в глоссарий
+```bash
+curl -X POST http://localhost:3000/api/projects/{id}/glossary \
+  -H "Content-Type: application/json" \
+  -d '{"type": "character", "original": "John", "gender": "male"}'
+```
+
