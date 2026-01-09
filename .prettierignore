@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+*.min.js
+*.min.css
+
+# Package files
+package-lock.json
+
+# Generated files
+*.d.ts
+
+# Data
+arcane-reader/data/
+

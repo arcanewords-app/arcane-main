@@ -2,24 +2,41 @@
   "name": "arcane",
   "version": "0.1.0",
   "private": true,
-  "description": "AI Novel Translator - Monorepo",
+  "description": "AI Novel Translator (EN → RU) - Monorepo with 3-stage translation pipeline",
   "workspaces": [
     "arcane-engine",
     "arcane-reader"
   ],
   "scripts": {
     "build": "npm run build -w arcane-engine",
+    "build:all": "npm run build -w arcane-engine && npm run build -w arcane-reader",
     "dev": "npm run dev -w arcane-reader",
+    "dev:force": "npm run dev:force -w arcane-reader",
     "start": "npm run start -w arcane-reader",
+    "start:force": "npm run start:force -w arcane-reader",
+    "lint": "npm run lint -w arcane-reader",
+    "clean": "rimraf arcane-engine/dist arcane-reader/dist",
     "install:all": "npm install"
   },
   "keywords": [
     "ai",
     "translation",
     "novel",
-    "monorepo"
+    "openai",
+    "gpt",
+    "russian",
+    "monorepo",
+    "preact",
+    "vite"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  }
 }
 

@@ -393,6 +393,101 @@ interface AppConfig {
 
 ---
 
+## arcane-reader/client
+
+### Client Types (src/client/types/index.ts)
+
+```typescript
+// Статус системы
+interface SystemStatus {
+  status: 'ok' | 'error';
+  ai: {
+    configured: boolean;
+    model: string;
+  };
+  database: {
+    connected: boolean;
+    projectCount: number;
+  };
+}
+
+// Проект (для списка)
+interface ProjectListItem {
+  id: string;
+  name: string;
+  chapterCount: number;
+  translatedCount: number;
+}
+
+// Параграф главы
+interface Paragraph {
+  id: string;
+  original: string;
+  translated?: string;
+}
+
+// Тип записи глоссария
+type GlossaryEntryType = 'character' | 'location' | 'term';
+
+// Запись глоссария
+interface GlossaryEntry {
+  id: string;
+  type: GlossaryEntryType;
+  original: string;
+  translated: string;
+  gender?: 'male' | 'female' | 'neutral' | 'unknown';
+  notes?: string;
+  imageUrl?: string;
+  declensions?: Declensions;
+}
+
+// Настройки проекта
+interface ProjectSettings {
+  model: string;
+  temperature: number;
+  stages: {
+    analyze: boolean;
+    translate: boolean;
+    edit: boolean;
+  };
+}
+
+// Статус главы
+type ChapterStatus = 'pending' | 'translating' | 'completed' | 'error';
+
+// Глава
+interface Chapter {
+  id: string;
+  number: number;
+  title: string;
+  originalText: string;
+  translatedText?: string;
+  status: ChapterStatus;
+  paragraphs: Paragraph[];
+  translationMeta?: {
+    tokensUsed: number;
+    duration: number;
+    model: string;
+    translatedAt: string;
+  };
+}
+
+// Полный проект
+interface Project {
+  id: string;
+  name: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  chapters: Chapter[];
+  glossary: GlossaryEntry[];
+  settings: ProjectSettings;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+---
+
 ## Использование типов
 
 ### Импорт из arcane-engine
@@ -438,7 +533,7 @@ import type {
 } from 'arcane-engine';
 ```
 
-### Импорт из arcane-reader
+### Импорт из arcane-reader (сервер)
 
 ```typescript
 import type {
@@ -450,5 +545,22 @@ import type {
 } from './storage/database.js';
 
 import type { AppConfig } from './config.js';
+```
+
+### Импорт из arcane-reader (клиент)
+
+```typescript
+import type {
+  SystemStatus,
+  ProjectListItem,
+  Project,
+  Chapter,
+  Paragraph,
+  GlossaryEntry,
+  GlossaryEntryType,
+  ProjectSettings,
+  ChapterStatus,
+  Declensions,
+} from './types';
 ```
 

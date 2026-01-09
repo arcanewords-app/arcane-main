@@ -1,7 +1,7 @@
 # 🔮 Arcane - AI-переводчик новелл
 
 **Версия:** 0.1.0  
-**Стек:** TypeScript, Node.js, Express, LowDB, OpenAI API  
+**Стек:** TypeScript, Node.js, Express, LowDB, OpenAI API, **Preact + Vite**  
 **Фокус:** EN → RU перевод художественной литературы
 
 ---
@@ -37,11 +37,19 @@ arcane/
 │
 └── arcane-reader/            # 📖 Web UI + сервер
     ├── public/               # Статичные файлы
+    ├── vite.config.ts        # Конфигурация Vite
     └── src/
-        ├── server.ts         # Express сервер
+        ├── server.ts         # Express API сервер
         ├── services/         # Интеграция с engine
         ├── storage/          # LowDB база данных
-        └── config.ts         # Конфигурация
+        ├── config.ts         # Конфигурация
+        └── client/           # ⚡ Preact SPA (NEW)
+            ├── main.tsx      # Точка входа
+            ├── App.tsx       # Главный компонент
+            ├── api/          # API клиент
+            ├── types/        # TypeScript типы клиента
+            ├── styles/       # CSS стили
+            └── components/   # UI компоненты
 ```
 
 ---

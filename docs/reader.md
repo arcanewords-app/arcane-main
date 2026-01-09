@@ -2,20 +2,53 @@
 
 Web-интерфейс и REST API сервер для переводчика новелл.
 
+**Стек клиента:** Preact + Vite + TypeScript
+
 ---
 
 ## 🚀 Запуск
 
+### Development (раздельные серверы)
+
 ```bash
-# Из корня монорепы
+cd arcane-reader
+
+# Запустить оба сервера параллельно
 npm run dev
 
-# Или напрямую
-cd arcane-reader
-npm run dev
+# Или по отдельности:
+npm run dev:server  # Express API на :3000
+npm run dev:client  # Vite HMR на :5173
 ```
 
-Сервер запустится на `http://localhost:3000`
+### Production
+
+```bash
+cd arcane-reader
+
+# Собрать клиент
+npm run build:client
+
+# Запустить сервер (раздаёт статику из dist/client)
+npm run start
+```
+
+Приложение будет доступно на `http://localhost:3000`
+
+---
+
+## 📜 NPM Scripts
+
+| Скрипт | Описание |
+|--------|----------|
+| `npm run dev` | Запуск dev сервера (API + Vite) |
+| `npm run dev:server` | Только Express API |
+| `npm run dev:client` | Только Vite HMR |
+| `npm run build` | Полная сборка (клиент + сервер) |
+| `npm run build:client` | Сборка клиента в `dist/client` |
+| `npm run build:server` | Компиляция TypeScript сервера |
+| `npm run start` | Запуск production сервера |
+| `npm run kill-port` | Освободить порт 3000 |
 
 ---
 
@@ -53,22 +86,69 @@ SKIP_EDITING=false
 ```
 arcane-reader/
 ├── public/
-│   ├── index.html          # Главная страница
+│   ├── index.html          # Entry point для Vite
 │   └── arcane_icon.png     # Иконка приложения
 │
 ├── src/
-│   ├── server.ts           # Express сервер
+│   ├── server.ts           # Express API сервер
 │   ├── config.ts           # Загрузка конфигурации
 │   │
 │   ├── services/
-│   │   └── engine-integration.ts   # Интеграция с arcane-engine
+│   │   ├── engine-integration.ts   # Интеграция с arcane-engine
+│   │   └── translation-service.ts  # Сервис перевода
 │   │
-│   └── storage/
-│       └── database.ts     # LowDB операции
+│   ├── storage/
+│   │   └── database.ts     # LowDB операции
+│   │
+│   └── client/             # ⚡ Preact SPA
+│       ├── main.tsx        # Точка входа
+│       ├── App.tsx         # Главный компонент
+│       ├── vite-env.d.ts   # Vite типы
+│       │
+│       ├── api/
+│       │   └── client.ts   # Типизированный API клиент
+│       │
+│       ├── types/
+│       │   └── index.ts    # TypeScript интерфейсы
+│       │
+│       ├── styles/
+│       │   └── index.css   # Все стили
+│       │
+│       └── components/
+│           ├── ui/         # Базовые компоненты
+│           │   ├── Button.tsx
+│           │   ├── Card.tsx
+│           │   ├── Modal.tsx
+│           │   ├── Input.tsx
+│           │   ├── Badge.tsx
+│           │   └── index.ts
+│           │
+│           ├── Header.tsx
+│           ├── ProjectInfo.tsx
+│           │
+│           ├── Sidebar/
+│           │   ├── index.tsx
+│           │   ├── ProjectList.tsx
+│           │   └── ChapterList.tsx
+│           │
+│           ├── ChapterView/
+│           │   ├── index.tsx
+│           │   ├── ChapterHeader.tsx
+│           │   ├── ReaderSettings.tsx
+│           │   └── ParagraphList.tsx
+│           │
+│           └── Glossary/
+│               ├── index.ts
+│               └── GlossaryModal.tsx
+│
+├── dist/
+│   └── client/             # Production билд (генерируется)
 │
 ├── data/
 │   └── arcane-db.json      # База данных (создаётся автоматически)
 │
+├── vite.config.ts          # Конфигурация Vite
+├── tsconfig.client.json    # TypeScript для клиента
 ├── .env                    # Конфигурация (не в git)
 └── env.example.txt         # Пример конфигурации
 ```
@@ -187,25 +267,71 @@ clearAgentCache(projectId: string): void
 
 ## 🖥️ UI Интерфейс
 
-### Главная страница
+### Архитектура
 
-- Список проектов
-- Создание нового проекта
-- Статус подключения к AI
+Клиент построен на **Preact** — легковесной альтернативе React (3KB gzip):
 
-### Страница проекта
+- **Preact + Hooks** — компонентный подход с хуками
+- **Vite** — быстрая сборка и HMR
+- **TypeScript** — полная типизация
+- **CSS Variables** — темизация через переменные
 
-- Список глав с прогрессом
-- Drag-n-drop загрузка .txt файлов
-- Глоссарий с редактированием
-- Предпросмотр переводов
+### Компоненты
 
-### Особенности UI
+| Компонент | Описание |
+|-----------|----------|
+| `Header` | Логотип, статус API |
+| `Sidebar` | Список проектов и глав |
+| `ProjectList` | Выбор/создание проектов |
+| `ChapterList` | Главы с фильтрами, drag-n-drop загрузка |
+| `ProjectInfo` | Настройки проекта (модель, температура) |
+| `ChapterView` | Просмотр/редактирование главы |
+| `ParagraphList` | Параллельный текст (оригинал/перевод) |
+| `GlossaryModal` | Управление глоссарием |
 
-- Интерфейс на русском языке
-- Логотип Arcane с анимацией
-- Индикатор статуса OpenAI API
-- Консольный лог переводов
+### UI Kit
+
+Базовые компоненты в `components/ui/`:
+
+```tsx
+import { Button, Card, Modal, Input, Badge, Select } from './components/ui';
+
+<Button variant="primary" loading={isLoading}>Перевести</Button>
+<Card title="📁 Проекты">...</Card>
+<Modal isOpen={show} onClose={close} title="Заголовок">...</Modal>
+```
+
+### Особенности
+
+- 🇷🇺 Интерфейс на русском языке
+- 🎨 Тёмная тема с градиентами
+- ⚡ Мгновенные обновления (HMR)
+- 📱 Адаптивный дизайн
+- ✨ Анимации и переходы
+
+### API Клиент
+
+Типизированный клиент в `api/client.ts`:
+
+```typescript
+import { api } from './api/client';
+
+// Проекты
+const projects = await api.getProjects();
+const project = await api.getProject(id);
+await api.createProject(name);
+await api.deleteProject(id);
+
+// Главы
+await api.uploadChapter(projectId, file, title);
+await api.translateChapter(projectId, chapterId);
+await api.deleteChapter(projectId, chapterId);
+
+// Глоссарий
+await api.addGlossary(projectId, entry);
+await api.updateGlossaryEntry(projectId, entryId, data);
+await api.deleteGlossaryEntry(projectId, entryId);
+```
 
 ---
 
@@ -249,4 +375,48 @@ data/arcane-db.json
 - **Никогда** не коммитьте `.env` с API ключами
 - База данных `.json` также в gitignore
 - Используйте `env.example.txt` как шаблон
+
+---
+
+## ⚡ Vite Конфигурация
+
+Файл `vite.config.ts`:
+
+```typescript
+import { defineConfig } from 'vite';
+import preact from '@preact/preset-vite';
+
+export default defineConfig({
+  plugins: [preact()],
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000',
+      '/images': 'http://localhost:3000',
+    },
+  },
+  build: {
+    outDir: 'dist/client',
+    emptyOutDir: true,
+  },
+});
+```
+
+### Proxy
+
+В dev режиме Vite проксирует API запросы на Express сервер:
+- `/api/*` → `http://localhost:3000`
+- `/images/*` → `http://localhost:3000`
+
+### Production Build
+
+```bash
+npm run build:client
+# Результат: dist/client/
+#   ├── index.html
+#   └── assets/
+#       ├── index-*.css  (~5 KB gzip)
+#       └── index-*.js   (~15 KB gzip)
+```
+
+Express сервер автоматически раздаёт статику из `dist/client/` в production режиме.
 
