@@ -309,6 +309,48 @@ Arcane Reader предоставляет REST API для управления п
 
 ---
 
+## 📤 Export
+
+### POST /api/projects/:id/export
+
+Экспортировать проект в формат EPUB или FB2.
+
+**Request:**
+```json
+{
+  "format": "epub",
+  "author": "Переведено Arcane"
+}
+```
+
+**Параметры:**
+- `format` (required) — `"epub"` или `"fb2"`
+- `author` (optional) — автор для метаданных (по умолчанию: "Переведено Arcane")
+
+**Response:** `200 OK`
+```json
+{
+  "success": true,
+  "format": "epub",
+  "filename": "My_Novel.epub",
+  "url": "/exports/My_Novel.epub",
+  "path": "My_Novel.epub"
+}
+```
+
+**Особенности:**
+- Экспортируются только главы со статусом `completed`
+- Главы сортируются по номеру (`number`)
+- Текст преобразуется в HTML (EPUB) или XML (FB2)
+- Файлы сохраняются в `data/exports/` и доступны по URL `/exports/{filename}`
+
+**Ошибки:**
+- `400` — Неверный формат (должен быть "epub" или "fb2")
+- `404` — Проект не найден
+- `500` — Нет переведенных глав для экспорта
+
+---
+
 ## 🔧 Error Responses
 
 Все ошибки возвращаются в формате:
@@ -359,3 +401,16 @@ curl -X POST http://localhost:3000/api/projects/{id}/glossary \
   -d '{"type": "character", "original": "John", "gender": "male"}'
 ```
 
+### Экспортировать проект в EPUB
+```bash
+curl -X POST http://localhost:3000/api/projects/{id}/export \
+  -H "Content-Type: application/json" \
+  -d '{"format": "epub", "author": "Переведено Arcane"}'
+```
+
+### Экспортировать проект в FB2
+```bash
+curl -X POST http://localhost:3000/api/projects/{id}/export \
+  -H "Content-Type: application/json" \
+  -d '{"format": "fb2"}'
+```

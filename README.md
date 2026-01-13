@@ -23,6 +23,8 @@
 - **Russian Morphology** — Automatic noun declensions (6 grammatical cases)
 - **Context Agent** — Maintains story context between chapters
 - **Modern Web UI** — Preact SPA with hot reload, ~15KB gzip bundle
+- **Export to EPUB/FB2** — Generate e-book files for reading apps
+- **Reading Mode** — Full-screen reading interface for translated chapters
 - **Monorepo** — Reusable engine package + web application
 
 ---
