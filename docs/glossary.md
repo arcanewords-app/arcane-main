@@ -24,12 +24,14 @@ interface Character {
   translatedName: string;    // "Александр"
   declensions: Declensions;  // Падежные формы
   gender: 'male' | 'female' | 'neutral' | 'unknown';
-  description: string;       // "Main protagonist"
+  description: string;       // "Main protagonist, young mage-researcher"
   aliases: string[];         // ["Alex", "Sasha"]
-  firstAppearance: number;   // Номер главы
+  firstAppearance: number;   // Номер главы первого упоминания
   isMainCharacter: boolean;
 }
 ```
+
+**Описание (description)**: Автоматически извлекается при анализе главы или добавляется вручную. Помогает переводчику лучше понимать контекст персонажа для более точного перевода диалогов и описаний.
 
 ### Location (Локация)
 
@@ -38,10 +40,12 @@ interface Location {
   id: string;
   originalName: string;      // "Crystal Palace"
   translatedName: string;    // "Хрустальный дворец"
-  description: string;
+  description: string;       // "Capital city, major trading hub"
   type: 'city' | 'country' | 'building' | 'region' | 'world' | 'other';
 }
 ```
+
+**Описание (description)**: Автоматически извлекается при анализе или добавляется вручную. Содержит краткую характеристику локации для лучшего контекста перевода.
 
 ### Term (Термин)
 
@@ -51,10 +55,12 @@ interface Term {
   originalTerm: string;      // "mana"
   translatedTerm: string;    // "мана"
   category: 'skill' | 'magic' | 'item' | 'title' | 'organization' | 'race' | 'other';
-  description: string;
+  description: string;        // "Magical energy used for spells"
   context?: string;
 }
 ```
+
+**Описание (description)**: Автоматически извлекается при анализе или добавляется вручную. Объясняет значение и использование термина для консистентного перевода.
 
 ---
 
@@ -222,7 +228,7 @@ const glossaryText = manager.toPromptFormat();
 
 ## Интеграция с промптами
 
-Глоссарий автоматически включается в промпт переводчика:
+Глоссарий автоматически включается в промпт переводчика с описаниями для лучшего контекста:
 
 ```typescript
 import { createGlossaryPromptSection } from 'arcane-engine';
@@ -232,27 +238,38 @@ const section = createGlossaryPromptSection(
     { 
       original: 'John', 
       translated: 'Джон', 
-      declensions: { genitive: 'Джона', dative: 'Джону', ... } 
+      declensions: { genitive: 'Джона', dative: 'Джону', ... },
+      description: 'Main protagonist, young mage-researcher',
     },
   ],
   [
-    { original: 'Dark Forest', translated: 'Тёмный лес' },
+    { 
+      original: 'Dark Forest', 
+      translated: 'Тёмный лес',
+      description: 'Mysterious forest where magic is strongest',
+    },
   ],
   [
-    { original: 'mana', translated: 'мана' },
+    { 
+      original: 'mana', 
+      translated: 'мана',
+      description: 'Magical energy used for casting spells',
+    },
   ]
 );
 
 // Результат:
 // ### Characters
-// - John → Джон (род: Джона, дат: Джону)
+// - John → Джон (род: Джона, дат: Джону) - Main protagonist, young mage-researcher
 //
 // ### Locations
-// - Dark Forest → Тёмный лес
+// - Dark Forest → Тёмный лес - Mysterious forest where magic is strongest
 //
 // ### Terms
-// - mana → мана
+// - mana → мана - Magical energy used for casting spells
 ```
+
+Описания помогают переводчику лучше понимать контекст и характер персонажей, что улучшает качество перевода диалогов и описаний.
 
 ---
 
@@ -312,14 +329,63 @@ const section = createGlossaryPromptSection(
 
 Автоматические склонения работают хорошо для большинства имён, но рекомендуется проверять сложные случаи.
 
-### 5. Добавляйте заметки
+### 5. Используйте описания (description)
 
-Поле `notes` помогает при ручной проверке:
+Описания автоматически извлекаются при анализе главы, но их можно редактировать вручную:
+
+```typescript
+{
+  original: 'Mark',
+  translated: 'Марк',
+  description: 'Главный герой, молодой маг-исследователь, склонный к анализу',
+  firstAppearance: 1,  // Номер главы первого упоминания
+}
+```
+
+Описания используются в промптах для перевода, что улучшает качество и контекстность перевода.
+
+### 6. Первое упоминание (firstAppearance)
+
+При автоматическом определении новых записей глоссария система сохраняет номер главы первого упоминания:
+
+```typescript
+{
+  original: 'Dark Forest',
+  translated: 'Тёмный лес',
+  firstAppearance: 3,  // Впервые упомянут в главе 3
+  autoDetected: true,
+}
+```
+
+Это помогает отслеживать, когда и где впервые появился персонаж, локация или термин.
+
+### 7. Галерея изображений
+
+Каждая запись глоссария может иметь несколько изображений:
+
+```typescript
+{
+  id: 'gl_001',
+  original: 'Mark',
+  translated: 'Марк',
+  imageUrls: [
+    '/uploads/project1/gl_001/image1.jpg',
+    '/uploads/project1/gl_001/image2.jpg',
+  ],
+}
+```
+
+Изображения можно добавлять, удалять и просматривать в полноэкранном режиме через UI.
+
+### 8. Добавляйте заметки
+
+Поле `notes` (отдельно от `description`) помогает при ручной проверке:
 ```typescript
 {
   original: 'The Order',
   translated: 'Орден',
-  notes: 'Тайная организация магов, всегда с заглавной',
+  description: 'Тайная организация магов',  // Описание сущности
+  notes: 'Всегда с заглавной буквы',        // Пользовательские заметки
 }
 ```
 

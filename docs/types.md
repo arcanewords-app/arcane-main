@@ -351,8 +351,13 @@ interface GlossaryEntry {
     instrumental: string;
     prepositional: string;
   };
-  notes?: string;
-  autoDetected?: boolean;
+  description?: string;        // Описание сущности (из анализа или вручную)
+  notes?: string;              // Пользовательские заметки (отдельно от description)
+  firstAppearance?: number;     // Номер главы первого упоминания
+  imageUrls?: string[];         // Галерея изображений
+  autoDetected?: boolean;       // Автоматически определена при анализе
+  // Legacy support
+  imageUrl?: string;           // Старое поле (мигрирует в imageUrls)
 }
 
 // Настройки проекта
@@ -436,9 +441,14 @@ interface GlossaryEntry {
   original: string;
   translated: string;
   gender?: 'male' | 'female' | 'neutral' | 'unknown';
-  notes?: string;
-  imageUrl?: string;
+  description?: string;        // Описание сущности (из анализа или вручную)
+  notes?: string;              // Пользовательские заметки (отдельно от description)
+  firstAppearance?: number;     // Номер главы первого упоминания
+  imageUrls?: string[];         // Галерея изображений
+  autoDetected?: boolean;       // Автоматически определена при анализе
   declensions?: Declensions;
+  // Legacy support
+  imageUrl?: string;           // Старое поле (мигрирует в imageUrls)
 }
 
 // Настройки проекта

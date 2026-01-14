@@ -244,6 +244,9 @@ Arcane Reader предоставляет REST API для управления п
     "original": "John",
     "translated": "Джон",
     "gender": "male",
+    "description": "Main protagonist, young mage-researcher",
+    "firstAppearance": 1,
+    "imageUrls": ["/uploads/project1/gl_001/image1.jpg"],
     "declensions": {
       "nominative": "Джон",
       "genitive": "Джона",
@@ -251,20 +254,26 @@ Arcane Reader предоставляет REST API для управления п
       "accusative": "Джона",
       "instrumental": "Джоном",
       "prepositional": "Джоне"
-    }
+    },
+    "autoDetected": true
   },
   {
     "id": "gl_002",
     "type": "location",
     "original": "Crystal Palace",
-    "translated": "Хрустальный дворец"
+    "translated": "Хрустальный дворец",
+    "description": "Capital city, major trading hub",
+    "firstAppearance": 2,
+    "imageUrls": []
   },
   {
     "id": "gl_003",
     "type": "term",
     "original": "mana",
     "translated": "мана",
-    "notes": "магическая энергия"
+    "description": "Magical energy used for casting spells",
+    "notes": "Категория: магия",
+    "firstAppearance": 1
   }
 ]
 ```
@@ -283,7 +292,9 @@ Arcane Reader предоставляет REST API для управления п
   "original": "Alexander",
   "translated": "Александр",
   "gender": "male",
-  "notes": "главный герой"
+  "description": "Главный герой, молодой маг-исследователь",
+  "notes": "Дополнительные заметки для проверки",
+  "firstAppearance": 1
 }
 ```
 
@@ -299,6 +310,9 @@ Arcane Reader предоставляет REST API для управления п
   "original": "Alexander",
   "translated": "Александр",
   "gender": "male",
+  "description": "Главный герой, молодой маг-исследователь",
+  "notes": "Дополнительные заметки для проверки",
+  "firstAppearance": 1,
   "declensions": {
     "nominative": "Александр",
     "genitive": "Александра",
@@ -306,10 +320,51 @@ Arcane Reader предоставляет REST API для управления п
     "accusative": "Александра",
     "instrumental": "Александром",
     "prepositional": "Александре"
-  },
-  "notes": "главный герой"
+  }
 }
 ```
+
+---
+
+### PUT /api/projects/:projectId/glossary/:entryId
+
+Обновить запись в глоссарии.
+
+**Request:**
+
+```json
+{
+  "type": "character",
+  "original": "Alexander",
+  "translated": "Александр",
+  "gender": "male",
+  "description": "Главный герой, молодой маг-исследователь",
+  "notes": "Дополнительные заметки",
+  "declensions": {
+    "nominative": "Александр",
+    "genitive": "Александра",
+    ...
+  }
+}
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": "gl_004",
+  "type": "character",
+  "original": "Alexander",
+  "translated": "Александр",
+  "gender": "male",
+  "description": "Главный герой, молодой маг-исследователь",
+  "notes": "Дополнительные заметки",
+  "firstAppearance": 1,
+  "declensions": { ... }
+}
+```
+
+> **Примечание**: Если `type: "character"` и `declensions` не указаны, система автоматически пересоздаст склонения.
 
 ---
 
@@ -322,6 +377,60 @@ Arcane Reader предоставляет REST API для управления п
 ```json
 {
   "success": true
+}
+```
+
+---
+
+### POST /api/projects/:projectId/glossary/:entryId/image
+
+Добавить изображение в галерею записи глоссария.
+
+**Request:** `multipart/form-data`
+
+- `image` (file, required) — файл изображения
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": "gl_001",
+  "imageUrls": [
+    "/uploads/project1/gl_001/image1.jpg",
+    "/uploads/project1/gl_001/image2.jpg"
+  ]
+}
+```
+
+---
+
+### DELETE /api/projects/:projectId/glossary/:entryId/image/:index
+
+Удалить конкретное изображение из галереи по индексу.
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": "gl_001",
+  "imageUrls": [
+    "/uploads/project1/gl_001/image1.jpg"
+  ]
+}
+```
+
+---
+
+### DELETE /api/projects/:projectId/glossary/:entryId/image
+
+Удалить все изображения из галереи записи.
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": "gl_001",
+  "imageUrls": []
 }
 ```
 
