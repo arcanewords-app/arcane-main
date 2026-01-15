@@ -1,10 +1,10 @@
 # 🔧 Arcane Engine
 
-Движок перевода новелл. Реализует 3-стадийный пайплайн и агент контекста.
+Translation engine for novels. Implements a 3-stage pipeline and context agent.
 
 ---
 
-## 📦 Экспорты
+## 📦 Exports
 
 ```typescript
 // Types
@@ -37,20 +37,20 @@ export { EDITOR_SYSTEM_PROMPT, createEditorPrompt, QUALITY_CHECK_PROMPT } from '
 
 ## 🔄 TranslationPipeline
 
-Оркестрирует 3-стадийный процесс перевода.
+Orchestrates the 3-stage translation process.
 
-### Использование
+### Usage
 
 ```typescript
 import { TranslationPipeline, OpenAIProvider, NovelAgent } from 'arcane-engine';
 
-// 1. Создать провайдер
+// 1. Create provider
 const provider = new OpenAIProvider({
   apiKey: 'sk-...',
   model: 'gpt-4-turbo-preview',
 });
 
-// 2. Создать агента
+// 2. Create agent
 const agent = NovelAgent.create({
   novelId: 'novel-1',
   title: 'My Novel',
@@ -58,49 +58,49 @@ const agent = NovelAgent.create({
   targetLanguage: 'ru',
 });
 
-// 3. Создать пайплайн
+// 3. Create pipeline
 const pipeline = new TranslationPipeline({ provider, agent });
 
-// 4. Перевести главу
+// 4. Translate chapter
 const result = await pipeline.translateChapter(sourceText, chapterNumber, {
-  skipAnalysis: false,  // Выполнять анализ (Stage 1)
-  skipEditing: false,   // Выполнять редактуру (Stage 3)
-  chunkSize: 2000,      // Токенов на чанк
+  skipAnalysis: false,  // Execute analysis (Stage 1)
+  skipEditing: false,   // Execute editing (Stage 3)
+  chunkSize: 2000,      // Tokens per chunk
 });
 
 console.log(result.finalTranslation);
-console.log(`Токенов: ${result.totalTokensUsed}`);
-console.log(`Время: ${result.totalDuration}ms`);
+console.log(`Tokens: ${result.totalTokensUsed}`);
+console.log(`Time: ${result.totalDuration}ms`);
 ```
 
-### Конфигурация
+### Configuration
 
 ```typescript
 interface PipelineOptions {
-  skipAnalysis?: boolean;   // Пропустить Stage 1 (анализ)
-  skipEditing?: boolean;    // Пропустить Stage 3 (редактура)
-  chunkSize?: number;       // Размер чанка в токенах
-  retryAttempts?: number;   // Попытки при ошибке
+  skipAnalysis?: boolean;   // Skip Stage 1 (analysis)
+  skipEditing?: boolean;    // Skip Stage 3 (editing)
+  chunkSize?: number;        // Chunk size in tokens
+  retryAttempts?: number;   // Retry attempts on error
 }
 ```
 
-### Результат
+### Result
 
 ```typescript
 interface PipelineResult {
   chapterNumber: number;
   originalText: string;
   
-  stage1: StageResult<AnalysisResult>;   // Результат анализа
-  stage2: StageResult<TranslationDraft>; // Черновик перевода
-  stage3: StageResult<EditedTranslation>; // Редактура
+  stage1: StageResult<AnalysisResult>;   // Analysis result
+  stage2: StageResult<TranslationDraft>; // Translation draft
+  stage3: StageResult<EditedTranslation>; // Edited version
   
-  finalTranslation: string;              // Финальный текст
+  finalTranslation: string;              // Final text
   
   totalTokensUsed: number;
   totalDuration: number;
   
-  updatedContext: AgentContext;          // Обновлённый контекст
+  updatedContext: AgentContext;          // Updated context
 }
 ```
 
@@ -108,9 +108,9 @@ interface PipelineResult {
 
 ## 🎭 NovelAgent
 
-Поддерживает контекст произведения между главами.
+Maintains work context between chapters.
 
-### Создание
+### Creation
 
 ```typescript
 const agent = NovelAgent.create({
@@ -121,10 +121,10 @@ const agent = NovelAgent.create({
 });
 ```
 
-### Глоссарий
+### Glossary
 
 ```typescript
-// Добавить персонажа
+// Add character
 agent.addCharacter({
   originalName: 'John',
   translatedName: 'Джон',
@@ -143,27 +143,27 @@ agent.addCharacter({
   isMainCharacter: true,
 });
 
-// Получить контекст для промпта
+// Get context for prompt
 const context = agent.getContext();
 ```
 
-### Сериализация
+### Serialization
 
 ```typescript
-// Сохранить состояние
+// Save state
 const state = agent.toJSON();
 
-// Восстановить
+// Restore
 const agent = NovelAgent.fromJSON(state);
 ```
 
 ---
 
-## 📚 Склонения (Declensions)
+## 📚 Declensions
 
-Автоматическая генерация падежных форм для русских имён.
+Automatic generation of case forms for Russian names.
 
-### Быстрое использование
+### Quick Usage
 
 ```typescript
 import { translateAndDeclineName } from 'arcane-engine';
@@ -183,7 +183,7 @@ const result = translateAndDeclineName('Alexander', 'male');
 // }
 ```
 
-### Транслитерация
+### Transliteration
 
 ```typescript
 import { transliterateEnToRu } from 'arcane-engine';
@@ -192,7 +192,7 @@ transliterateEnToRu('Michael'); // 'Майкл'
 transliterateEnToRu('Catherine'); // 'Кэтрин'
 ```
 
-### Словарь известных имён
+### Known Names Dictionary
 
 ```typescript
 import { EN_RU_NAMES } from 'arcane-engine';
@@ -203,11 +203,11 @@ EN_RU_NAMES['Elizabeth']; // { ru: 'Елизавета', gender: 'female' }
 
 ---
 
-## 🧩 Стадии перевода
+## 🧩 Translation Stages
 
-### Stage 1: Analyze (Анализ)
+### Stage 1: Analyze
 
-Извлекает сущности и анализирует стиль текста.
+Extracts entities and analyzes text style.
 
 ```typescript
 import { AnalyzeStage } from 'arcane-engine';
@@ -218,7 +218,7 @@ const result = await stage.execute(sourceText, {
   existingGlossary: glossary,
 });
 
-// result.data содержит:
+// result.data contains:
 // - foundCharacters[]
 // - foundLocations[]
 // - foundTerms[]
@@ -227,9 +227,9 @@ const result = await stage.execute(sourceText, {
 // - styleNotes
 ```
 
-### Stage 2: Translate (Перевод)
+### Stage 2: Translate
 
-Выполняет перевод с учётом глоссария.
+Performs translation with glossary consideration.
 
 ```typescript
 import { TranslateStage } from 'arcane-engine';
@@ -240,13 +240,13 @@ const result = await stage.execute(sourceText, {
   chunkSize: 2000,
 });
 
-// result.data.translatedText - полный перевод
-// result.data.chunkResults[] - результаты по чанкам
+// result.data.translatedText - full translation
+// result.data.chunkResults[] - results per chunk
 ```
 
-### Stage 3: Edit (Редактура)
+### Stage 3: Edit
 
-Полирует перевод для лучшего качества.
+Polishes translation for better quality.
 
 ```typescript
 import { EditStage } from 'arcane-engine';
@@ -257,61 +257,61 @@ const result = await stage.execute(translatedText, originalText, {
   checkQuality: true,
 });
 
-// result.data.finalText - отредактированный текст
-// result.data.qualityScore - оценка качества (1-10)
+// result.data.finalText - edited text
+// result.data.qualityScore - quality score (1-10)
 ```
 
 ---
 
-## 📝 Системные промпты
+## 📝 System Prompts
 
 ### Analyzer Prompt
 
-Задача: извлечь персонажей, локации, термины, проанализировать стиль.
+Task: extract characters, locations, terms, analyze style.
 
-Выход: JSON с `characters`, `locations`, `terms`, `chapterSummary`, `keyEvents`, `styleNotes`.
+Output: JSON with `characters`, `locations`, `terms`, `chapterSummary`, `keyEvents`, `styleNotes`.
 
 ### Translator Prompt
 
-Задача: точный перевод с соблюдением глоссария.
+Task: accurate translation with glossary compliance.
 
-Правила:
-- Использовать ТОЧНЫЕ переводы из глоссария
-- Применять правильные грамматические формы
-- Сохранять стиль и голос автора
-- Адаптировать культурные отсылки
+Rules:
+- Use EXACT translations from glossary
+- Apply correct grammatical forms
+- Preserve author's style and voice
+- Adapt cultural references
 
 ### Editor Prompt
 
-Задача: улучшить читаемость и литературное качество.
+Task: improve readability and literary quality.
 
-Правила:
-- Исправлять неестественные конструкции
-- Сохранять смысл и авторский стиль
-- НЕ менять имена и термины из глоссария
-- НЕ добавлять/удалять контент
+Rules:
+- Fix unnatural constructions
+- Preserve meaning and author's style
+- DO NOT change names and terms from glossary
+- DO NOT add/remove content
 
 ---
 
-## 🔧 Утилиты
+## 🔧 Utilities
 
 ### Chunker
 
-Разбивает текст на чанки для API.
+Splits text into chunks for API.
 
 ```typescript
 import { chunkText, mergeChunks, estimateTokens } from 'arcane-engine';
 
-// Разбить текст
+// Split text
 const chunks = chunkText(longText, {
   maxTokens: 2000,
   preserveParagraphs: true,
 });
 
-// Оценить токены
-const tokens = estimateTokens(text); // ~4 символа = 1 токен
+// Estimate tokens
+const tokens = estimateTokens(text); // ~4 characters = 1 token
 
-// Объединить обратно
+// Merge back
 const merged = mergeChunks(translatedChunks);
 ```
 
@@ -326,15 +326,15 @@ import { OpenAIProvider } from 'arcane-engine';
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY,
-  model: 'gpt-4-turbo-preview', // или gpt-4o, gpt-3.5-turbo
+  model: 'gpt-4-turbo-preview', // or gpt-4o, gpt-3.5-turbo
   temperature: 0.7,
   maxTokens: 4096,
 });
 ```
 
-### Интерфейс ILLMProvider
+### ILLMProvider Interface
 
-Для добавления других провайдеров (Anthropic, local LLM):
+To add other providers (Anthropic, local LLM):
 
 ```typescript
 interface ILLMProvider {
@@ -342,4 +342,3 @@ interface ILLMProvider {
   getModelInfo(): { name: string; maxTokens: number };
 }
 ```
-

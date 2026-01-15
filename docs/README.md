@@ -1,94 +1,94 @@
-# 🔮 Arcane - AI-переводчик новелл
+# 🔮 Arcane - AI Novel Translator
 
-**Версия:** 0.1.0  
-**Стек:** TypeScript, Node.js, Express, LowDB, OpenAI API, **Preact + Vite**  
-**Фокус:** EN → RU перевод художественной литературы
-
----
-
-## 📋 Обзор
-
-Arcane — система для перевода новелл с использованием ИИ. Ключевые особенности:
-
-- **3-стадийный пайплайн** — анализ → перевод → редактура
-- **Агент контекста** — сохранение состояния между главами
-- **Глоссарий** — консистентный перевод имён и терминов
-  - **Автоматическое извлечение** — персонажи, локации и термины определяются при анализе
-  - **Описания** — автоматически извлекаются и используются в промптах для лучшего контекста
-  - **Первое упоминание** — отслеживание номера главы первого появления
-  - **Галерея изображений** — несколько изображений для каждой записи
-- **Склонения** — автоматические падежные формы для русского языка
-- **Персистентное хранилище** — LowDB для сохранения данных
-- **Экспорт в EPUB/FB2** — генерация файлов для электронных читалок
-- **Режим чтения** — полноэкранный интерфейс для чтения переведенных глав
+**Version:** 0.1.0  
+**Stack:** TypeScript, Node.js, Express, LowDB, OpenAI API, **Preact + Vite**  
+**Focus:** EN → RU translation of fiction literature
 
 ---
 
-## 🏗️ Архитектура
+## 📋 Overview
+
+Arcane is a system for translating novels using AI. Key features:
+
+- **3-stage pipeline** — analysis → translation → editing
+- **Context agent** — maintains state between chapters
+- **Glossary** — consistent translation of names and terms
+  - **Automatic extraction** — characters, locations, and terms are identified during analysis
+  - **Descriptions** — automatically extracted and used in prompts for better context
+  - **First appearance** — tracking the chapter number of first mention
+  - **Image gallery** — multiple images for each entry
+- **Declensions** — automatic case forms for Russian language
+- **Persistent storage** — LowDB for data persistence
+- **EPUB/FB2 export** — generate files for e-readers
+- **Reading mode** — full-screen interface for reading translated chapters
+
+---
+
+## 🏗️ Architecture
 
 ```
 arcane/
-├── package.json              # Корень монорепы (npm workspaces)
-├── docs/                     # Документация
+├── package.json              # Monorepo root (npm workspaces)
+├── docs/                     # Documentation
 │
-├── arcane-engine/            # 🔧 Движок перевода
+├── arcane-engine/            # 🔧 Translation engine
 │   └── src/
-│       ├── agents/           # NovelAgent - контекст произведения
-│       ├── pipeline/         # TranslationPipeline - оркестрация
-│       ├── stages/           # 3 стадии перевода
-│       ├── prompts/          # Системные промпты
-│       ├── glossary/         # Глоссарий и склонения
-│       ├── providers/        # LLM провайдеры (OpenAI)
-│       └── types/            # TypeScript типы
+│       ├── agents/           # NovelAgent - work context
+│       ├── pipeline/         # TranslationPipeline - orchestration
+│       ├── stages/           # 3 translation stages
+│       ├── prompts/          # System prompts
+│       ├── glossary/         # Glossary and declensions
+│       ├── providers/        # LLM providers (OpenAI)
+│       └── types/            # TypeScript types
 │
-└── arcane-reader/            # 📖 Web UI + сервер
-    ├── public/               # Статичные файлы
-    ├── vite.config.ts        # Конфигурация Vite
+└── arcane-reader/            # 📖 Web UI + server
+    ├── public/               # Static files
+    ├── vite.config.ts        # Vite configuration
     └── src/
-        ├── server.ts         # Express API сервер
-        ├── services/         # Интеграция с engine
-        ├── storage/          # LowDB база данных
-        ├── config.ts         # Конфигурация
+        ├── server.ts         # Express API server
+        ├── services/         # Engine integration
+        ├── storage/          # LowDB database
+        ├── config.ts         # Configuration
         └── client/           # ⚡ Preact SPA (NEW)
-            ├── main.tsx      # Точка входа
-            ├── App.tsx       # Главный компонент
-            ├── api/          # API клиент
-            ├── types/        # TypeScript типы клиента
-            ├── styles/       # CSS стили
-            └── components/   # UI компоненты
+            ├── main.tsx      # Entry point
+            ├── App.tsx       # Main component
+            ├── api/          # API client
+            ├── types/        # TypeScript client types
+            ├── styles/       # CSS styles
+            └── components/   # UI components
 ```
 
 ---
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
 ```bash
-# 1. Клонировать репозиторий
+# 1. Clone repository
 cd arcane
 
-# 2. Установить зависимости
+# 2. Install dependencies
 npm install
 
-# 3. Настроить API ключ
-# Скопировать arcane-reader/env.example.txt → arcane-reader/.env
-# Добавить OPENAI_API_KEY=sk-...
+# 3. Configure API key
+# Copy arcane-reader/env.example.txt → arcane-reader/.env
+# Add OPENAI_API_KEY=sk-...
 
-# 4. Собрать engine
+# 4. Build engine
 npm run build
 
-# 5. Запустить сервер
+# 5. Start server
 npm run dev
 
-# Открыть http://localhost:3000
+# Open http://localhost:3000
 ```
 
 ---
 
-## 📦 Модули
+## 📦 Modules
 
 ### arcane-engine
 
-Ядро переводчика. Может использоваться как standalone библиотека.
+Translation engine core. Can be used as a standalone library.
 
 ```typescript
 import { 
@@ -99,32 +99,31 @@ import {
 } from 'arcane-engine';
 ```
 
-[→ Подробнее: engine.md](./engine.md)
+[→ More details: engine.md](./engine.md)
 
 ### arcane-reader
 
-Web-интерфейс и API сервер.
+Web interface and API server.
 
-- Управление проектами и главами
-- Глоссарий с автосклонениями
-- Drag-n-drop загрузка файлов
-- Отображение перевода
+- Project and chapter management
+- Glossary with auto-declensions
+- Drag-n-drop file upload
+- Translation display
 
-[→ Подробнее: reader.md](./reader.md)
+[→ More details: reader.md](./reader.md)
 
 ---
 
 ## 🔗 API Reference
 
-[→ Подробнее: api.md](./api.md)
+[→ More details: api.md](./api.md)
 
 ---
 
-## 📚 См. также
+## 📚 See Also
 
-- [engine.md](./engine.md) — документация движка
-- [reader.md](./reader.md) — документация UI/сервера  
+- [engine.md](./engine.md) — engine documentation
+- [reader.md](./reader.md) — UI/server documentation  
 - [api.md](./api.md) — REST API
-- [prompts.md](./prompts.md) — системные промпты
-- [glossary.md](./glossary.md) — работа с глоссарием
-
+- [prompts.md](./prompts.md) — system prompts
+- [glossary.md](./glossary.md) — glossary usage

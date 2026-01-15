@@ -1,39 +1,39 @@
-# 📚 Глоссарий и склонения
+# 📚 Glossary and Declensions
 
-Документация по работе с глоссарием и системой склонений для русского языка.
-
----
-
-## Обзор
-
-Глоссарий обеспечивает:
-- **Консистентность** — одинаковый перевод имён и терминов
-- **Склонения** — правильные падежные формы для русского языка
-- **Контекст** — дополнительная информация для переводчика
+Documentation on working with glossary and declension system for Russian language.
 
 ---
 
-## Типы записей
+## Overview
 
-### Character (Персонаж)
+Glossary ensures:
+- **Consistency** — same translation of names and terms
+- **Declensions** — correct case forms for Russian language
+- **Context** — additional information for translator
+
+---
+
+## Entry Types
+
+### Character
 
 ```typescript
 interface Character {
   id: string;
   originalName: string;      // "Alexander"
   translatedName: string;    // "Александр"
-  declensions: Declensions;  // Падежные формы
+  declensions: Declensions;  // Case forms
   gender: 'male' | 'female' | 'neutral' | 'unknown';
   description: string;       // "Main protagonist, young mage-researcher"
   aliases: string[];         // ["Alex", "Sasha"]
-  firstAppearance: number;   // Номер главы первого упоминания
+  firstAppearance: number;   // Chapter number of first mention
   isMainCharacter: boolean;
 }
 ```
 
-**Описание (description)**: Автоматически извлекается при анализе главы или добавляется вручную. Помогает переводчику лучше понимать контекст персонажа для более точного перевода диалогов и описаний.
+**Description**: Automatically extracted during chapter analysis or added manually. Helps translator better understand character context for more accurate translation of dialogues and descriptions.
 
-### Location (Локация)
+### Location
 
 ```typescript
 interface Location {
@@ -45,9 +45,9 @@ interface Location {
 }
 ```
 
-**Описание (description)**: Автоматически извлекается при анализе или добавляется вручную. Содержит краткую характеристику локации для лучшего контекста перевода.
+**Description**: Automatically extracted during analysis or added manually. Contains brief location characteristics for better translation context.
 
-### Term (Термин)
+### Term
 
 ```typescript
 interface Term {
@@ -60,45 +60,45 @@ interface Term {
 }
 ```
 
-**Описание (description)**: Автоматически извлекается при анализе или добавляется вручную. Объясняет значение и использование термина для консистентного перевода.
+**Description**: Automatically extracted during analysis or added manually. Explains term meaning and usage for consistent translation.
 
 ---
 
-## Склонения (Declensions)
+## Declensions
 
-Русский язык имеет 6 падежей. Для правильного использования имён в предложениях нужны все формы.
+Russian language has 6 cases. All forms are needed for correct name usage in sentences.
 
-### Падежи
+### Cases
 
 ```typescript
 interface Declensions {
-  nominative: string;    // Именительный (кто? что?) — Иван
-  genitive: string;      // Родительный (кого? чего?) — Ивана
-  dative: string;        // Дательный (кому? чему?) — Ивану
-  accusative: string;    // Винительный (кого? что?) — Ивана
-  instrumental: string;  // Творительный (кем? чем?) — Иваном
-  prepositional: string; // Предложный (о ком? о чём?) — Иване
+  nominative: string;    // Nominative (who? what?) — Иван
+  genitive: string;      // Genitive (whom? what?) — Ивана
+  dative: string;        // Dative (to whom? to what?) — Ивану
+  accusative: string;    // Accusative (whom? what?) — Ивана
+  instrumental: string;  // Instrumental (with whom? with what?) — Иваном
+  prepositional: string; // Prepositional (about whom? about what?) — Иване
 }
 ```
 
-### Примеры использования в тексте
+### Usage Examples in Text
 
-| Падеж | Вопрос | Пример |
-|-------|--------|--------|
-| Именительный | Кто? | **Иван** пришёл домой |
-| Родительный | Кого нет? | Здесь нет **Ивана** |
-| Дательный | Кому? | Отдай это **Ивану** |
-| Винительный | Кого вижу? | Я вижу **Ивана** |
-| Творительный | С кем? | Я иду с **Иваном** |
-| Предложный | О ком? | Расскажи об **Иване** |
+| Case | Question | Example |
+|------|----------|---------|
+| Nominative | Who? | **Иван** came home |
+| Genitive | Whom is missing? | There is no **Ивана** here |
+| Dative | To whom? | Give this to **Ивану** |
+| Accusative | Whom do I see? | I see **Ивана** |
+| Instrumental | With whom? | I'm going with **Иваном** |
+| Prepositional | About whom? | Tell me about **Иване** |
 
 ---
 
-## Автоматические склонения
+## Automatic Declensions
 
-Arcane использует библиотеку **Petrovich** для автоматической генерации склонений.
+Arcane uses the **Petrovich** library for automatic declension generation.
 
-### Использование
+### Usage
 
 ```typescript
 import { translateAndDeclineName } from 'arcane-engine';
@@ -120,9 +120,9 @@ console.log(result);
 // }
 ```
 
-### Транслитерация
+### Transliteration
 
-Для имён без известного перевода используется транслитерация:
+For names without known translation, transliteration is used:
 
 ```typescript
 import { transliterateEnToRu } from 'arcane-engine';
@@ -132,27 +132,27 @@ transliterateEnToRu('Catherine'); // 'Кэтрин'
 transliterateEnToRu('George');    // 'Джордж'
 ```
 
-### Словарь известных имён
+### Known Names Dictionary
 
 ```typescript
 import { EN_RU_NAMES } from 'arcane-engine';
 
-// Предопределённые переводы популярных имён
+// Predefined translations of popular names
 EN_RU_NAMES['Alexander'] = { ru: 'Александр', gender: 'male' };
 EN_RU_NAMES['Elizabeth'] = { ru: 'Елизавета', gender: 'female' };
 EN_RU_NAMES['John']      = { ru: 'Джон', gender: 'male' };
 EN_RU_NAMES['Mary']      = { ru: 'Мария', gender: 'female' };
-// ... и другие
+// ... and others
 ```
 
 ---
 
-## API для глоссария
+## Glossary API
 
-### Добавление через REST API
+### Adding via REST API
 
 ```bash
-# Добавить персонажа (склонения сгенерируются автоматически)
+# Add character (declensions generated automatically)
 curl -X POST http://localhost:3000/api/projects/{id}/glossary \
   -H "Content-Type: application/json" \
   -d '{
@@ -176,14 +176,14 @@ curl -X POST http://localhost:3000/api/projects/{id}/glossary \
 # }
 ```
 
-### Добавление через код
+### Adding via Code
 
 ```typescript
 import { NovelAgent, translateAndDeclineName } from 'arcane-engine';
 
 const agent = NovelAgent.create({ ... });
 
-// Авто-склонения
+// Auto-declensions
 const { translatedName, declensions, gender } = translateAndDeclineName('William', 'male');
 
 agent.addCharacter({
@@ -202,14 +202,14 @@ agent.addCharacter({
 
 ## GlossaryManager
 
-Класс для управления глоссарием в движке.
+Class for managing glossary in the engine.
 
 ```typescript
 import { GlossaryManager } from 'arcane-engine';
 
 const manager = new GlossaryManager();
 
-// Добавить персонажа
+// Add character
 manager.addCharacter({
   originalName: 'Sarah',
   translatedName: 'Сара',
@@ -217,18 +217,18 @@ manager.addCharacter({
   // ...
 });
 
-// Найти персонажа
+// Find character
 const character = manager.findCharacter('Sarah');
 
-// Получить все записи для промпта
+// Get all entries for prompt
 const glossaryText = manager.toPromptFormat();
 ```
 
 ---
 
-## Интеграция с промптами
+## Prompt Integration
 
-Глоссарий автоматически включается в промпт переводчика с описаниями для лучшего контекста:
+Glossary is automatically included in translator prompt with descriptions for better context:
 
 ```typescript
 import { createGlossaryPromptSection } from 'arcane-engine';
@@ -258,9 +258,9 @@ const section = createGlossaryPromptSection(
   ]
 );
 
-// Результат:
+// Result:
 // ### Characters
-// - John → Джон (род: Джона, дат: Джону) - Main protagonist, young mage-researcher
+// - John → Джон (gen: Джона, dat: Джону) - Main protagonist, young mage-researcher
 //
 // ### Locations
 // - Dark Forest → Тёмный лес - Mysterious forest where magic is strongest
@@ -269,55 +269,55 @@ const section = createGlossaryPromptSection(
 // - mana → мана - Magical energy used for casting spells
 ```
 
-Описания помогают переводчику лучше понимать контекст и характер персонажей, что улучшает качество перевода диалогов и описаний.
+Descriptions help translator better understand context and character traits, improving dialogue and description translation quality.
 
 ---
 
-## Особенности склонений
+## Declension Features
 
-### Мужские имена
+### Male Names
 
-| Оригинал | Перевод | Род. | Дат. | Вин. | Твор. | Предл. |
-|----------|---------|------|------|------|-------|--------|
+| Original | Translation | Gen. | Dat. | Acc. | Inst. | Prep. |
+|----------|-------------|------|------|------|-------|-------|
 | Alexander | Александр | Александра | Александру | Александра | Александром | Александре |
 | John | Джон | Джона | Джону | Джона | Джоном | Джоне |
 | Michael | Майкл | Майкла | Майклу | Майкла | Майклом | Майкле |
 
-### Женские имена
+### Female Names
 
-| Оригинал | Перевод | Род. | Дат. | Вин. | Твор. | Предл. |
-|----------|---------|------|------|------|-------|--------|
+| Original | Translation | Gen. | Dat. | Acc. | Inst. | Prep. |
+|----------|-------------|------|------|------|-------|-------|
 | Mary | Мария | Марии | Марии | Марию | Марией | Марии |
 | Elizabeth | Елизавета | Елизаветы | Елизавете | Елизавету | Елизаветой | Елизавете |
 | Sarah | Сара | Сары | Саре | Сару | Сарой | Саре |
 
-### Неизменяемые имена
+### Invariable Names
 
-Некоторые имена не склоняются в русском:
+Some names don't decline in Russian:
 
 ```typescript
-// Имена на гласную (женские иностранные)
-'Sophie' → 'Софи' (все падежи одинаковые)
+// Names ending in vowel (foreign female)
+'Sophie' → 'Софи' (all cases the same)
 
-// Односложные иностранные имена
-'Lee' → 'Ли' (не склоняется)
+// Monosyllabic foreign names
+'Lee' → 'Ли' (doesn't decline)
 ```
 
 ---
 
-## Советы по работе с глоссарием
+## Glossary Usage Tips
 
-### 1. Добавляйте персонажей заранее
+### 1. Add Characters in Advance
 
-Перед переводом добавьте всех известных персонажей в глоссарий. Это обеспечит консистентность с первой главы.
+Before translation, add all known characters to the glossary. This ensures consistency from the first chapter.
 
-### 2. Указывайте пол
+### 2. Specify Gender
 
-Пол влияет на правильность склонений. Если пол неизвестен, используйте `'unknown'`.
+Gender affects declension correctness. If gender is unknown, use `'unknown'`.
 
-### 3. Используйте aliases
+### 3. Use Aliases
 
-Добавляйте псевдонимы и прозвища:
+Add pseudonyms and nicknames:
 ```typescript
 {
   originalName: 'William',
@@ -325,43 +325,43 @@ const section = createGlossaryPromptSection(
 }
 ```
 
-### 4. Проверяйте авто-склонения
+### 4. Check Auto-declensions
 
-Автоматические склонения работают хорошо для большинства имён, но рекомендуется проверять сложные случаи.
+Automatic declensions work well for most names, but complex cases should be checked.
 
-### 5. Используйте описания (description)
+### 5. Use Descriptions
 
-Описания автоматически извлекаются при анализе главы, но их можно редактировать вручную:
+Descriptions are automatically extracted during chapter analysis, but can be edited manually:
 
 ```typescript
 {
   original: 'Mark',
   translated: 'Марк',
-  description: 'Главный герой, молодой маг-исследователь, склонный к анализу',
-  firstAppearance: 1,  // Номер главы первого упоминания
+  description: 'Main protagonist, young mage-researcher, analytical',
+  firstAppearance: 1,  // Chapter number of first mention
 }
 ```
 
-Описания используются в промптах для перевода, что улучшает качество и контекстность перевода.
+Descriptions are used in translation prompts, improving translation quality and context.
 
-### 6. Первое упоминание (firstAppearance)
+### 6. First Appearance (firstAppearance)
 
-При автоматическом определении новых записей глоссария система сохраняет номер главы первого упоминания:
+When automatically detecting new glossary entries, the system saves the chapter number of first mention:
 
 ```typescript
 {
   original: 'Dark Forest',
   translated: 'Тёмный лес',
-  firstAppearance: 3,  // Впервые упомянут в главе 3
+  firstAppearance: 3,  // First mentioned in chapter 3
   autoDetected: true,
 }
 ```
 
-Это помогает отслеживать, когда и где впервые появился персонаж, локация или термин.
+This helps track when and where a character, location, or term first appeared.
 
-### 7. Галерея изображений
+### 7. Image Gallery
 
-Каждая запись глоссария может иметь несколько изображений:
+Each glossary entry can have multiple images:
 
 ```typescript
 {
@@ -375,17 +375,16 @@ const section = createGlossaryPromptSection(
 }
 ```
 
-Изображения можно добавлять, удалять и просматривать в полноэкранном режиме через UI.
+Images can be added, deleted, and viewed in fullscreen mode via UI.
 
-### 8. Добавляйте заметки
+### 8. Add Notes
 
-Поле `notes` (отдельно от `description`) помогает при ручной проверке:
+The `notes` field (separate from `description`) helps during manual verification:
 ```typescript
 {
   original: 'The Order',
   translated: 'Орден',
-  description: 'Тайная организация магов',  // Описание сущности
-  notes: 'Всегда с заглавной буквы',        // Пользовательские заметки
+  description: 'Secret organization of mages',  // Entity description
+  notes: 'Always capitalized',                 // User notes
 }
 ```
-

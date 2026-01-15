@@ -1,6 +1,6 @@
 # 🔗 REST API Reference
 
-Arcane Reader предоставляет REST API для управления проектами и переводами.
+Arcane Reader provides a REST API for managing projects and translations.
 
 **Base URL:** `http://localhost:3000`
 
@@ -10,7 +10,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### GET /api/status
 
-Проверка состояния сервера и AI провайдера.
+Check server and AI provider status.
 
 **Response:**
 
@@ -36,7 +36,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### GET /api/projects
 
-Получить список всех проектов.
+Get list of all projects.
 
 **Response:**
 
@@ -59,7 +59,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### POST /api/projects
 
-Создать новый проект.
+Create a new project.
 
 **Request:**
 
@@ -95,7 +95,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### GET /api/projects/:id
 
-Получить проект по ID.
+Get project by ID.
 
 **Response:**
 
@@ -115,7 +115,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### DELETE /api/projects/:id
 
-Удалить проект.
+Delete a project.
 
 **Response:** `200 OK`
 
@@ -131,7 +131,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### POST /api/projects/:id/chapters
 
-Добавить главу в проект.
+Add a chapter to the project.
 
 **Request:**
 
@@ -158,12 +158,12 @@ Arcane Reader предоставляет REST API для управления п
 
 ### POST /api/projects/:projectId/chapters/upload
 
-Загрузить главу из файла (multipart/form-data).
+Upload a chapter from a file (multipart/form-data).
 
 **Form fields:**
 
-- `file` — .txt файл с текстом главы
-- `title` (optional) — название главы
+- `file` — .txt file with chapter text
+- `title` (optional) — chapter title
 
 **Response:** `201 Created`
 
@@ -181,7 +181,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### GET /api/projects/:projectId/chapters/:chapterId
 
-Получить главу.
+Get a chapter.
 
 **Response:**
 
@@ -206,7 +206,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### POST /api/projects/:projectId/chapters/:chapterId/translate
 
-Запустить перевод главы.
+Start chapter translation.
 
 **Response:** `200 OK`
 
@@ -217,14 +217,14 @@ Arcane Reader предоставляет REST API для управления п
 }
 ```
 
-Перевод выполняется асинхронно. Проверяйте статус главы через GET.
+Translation runs asynchronously. Check chapter status via GET.
 
 **Statuses:**
 
-- `pending` — ожидает перевода
-- `translating` — в процессе
-- `completed` — завершён
-- `error` — ошибка
+- `pending` — awaiting translation
+- `translating` — in progress
+- `completed` — finished
+- `error` — error occurred
 
 ---
 
@@ -232,7 +232,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### GET /api/projects/:id/glossary
 
-Получить глоссарий проекта.
+Get project glossary.
 
 **Response:**
 
@@ -272,7 +272,7 @@ Arcane Reader предоставляет REST API для управления п
     "original": "mana",
     "translated": "мана",
     "description": "Magical energy used for casting spells",
-    "notes": "Категория: магия",
+    "notes": "Category: magic",
     "firstAppearance": 1
   }
 ]
@@ -282,7 +282,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### POST /api/projects/:id/glossary
 
-Добавить запись в глоссарий.
+Add an entry to the glossary.
 
 **Request:**
 
@@ -292,14 +292,14 @@ Arcane Reader предоставляет REST API для управления п
   "original": "Alexander",
   "translated": "Александр",
   "gender": "male",
-  "description": "Главный герой, молодой маг-исследователь",
-  "notes": "Дополнительные заметки для проверки",
+  "description": "Main protagonist, young mage-researcher",
+  "notes": "Additional notes for verification",
   "firstAppearance": 1
 }
 ```
 
-> **Авто-склонения**: Если `type: "character"` и `declensions` не указаны,
-> система автоматически сгенерирует падежные формы.
+> **Auto-declensions**: If `type: "character"` and `declensions` are not specified,
+> the system will automatically generate case forms.
 
 **Response:** `201 Created`
 
@@ -310,8 +310,8 @@ Arcane Reader предоставляет REST API для управления п
   "original": "Alexander",
   "translated": "Александр",
   "gender": "male",
-  "description": "Главный герой, молодой маг-исследователь",
-  "notes": "Дополнительные заметки для проверки",
+  "description": "Main protagonist, young mage-researcher",
+  "notes": "Additional notes for verification",
   "firstAppearance": 1,
   "declensions": {
     "nominative": "Александр",
@@ -328,7 +328,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### PUT /api/projects/:projectId/glossary/:entryId
 
-Обновить запись в глоссарии.
+Update a glossary entry.
 
 **Request:**
 
@@ -338,8 +338,8 @@ Arcane Reader предоставляет REST API для управления п
   "original": "Alexander",
   "translated": "Александр",
   "gender": "male",
-  "description": "Главный герой, молодой маг-исследователь",
-  "notes": "Дополнительные заметки",
+  "description": "Main protagonist, young mage-researcher",
+  "notes": "Additional notes",
   "declensions": {
     "nominative": "Александр",
     "genitive": "Александра",
@@ -357,20 +357,20 @@ Arcane Reader предоставляет REST API для управления п
   "original": "Alexander",
   "translated": "Александр",
   "gender": "male",
-  "description": "Главный герой, молодой маг-исследователь",
-  "notes": "Дополнительные заметки",
+  "description": "Main protagonist, young mage-researcher",
+  "notes": "Additional notes",
   "firstAppearance": 1,
   "declensions": { ... }
 }
 ```
 
-> **Примечание**: Если `type: "character"` и `declensions` не указаны, система автоматически пересоздаст склонения.
+> **Note**: If `type: "character"` and `declensions` are not specified, the system will automatically regenerate declensions.
 
 ---
 
 ### DELETE /api/projects/:projectId/glossary/:entryId
 
-Удалить запись из глоссария.
+Delete a glossary entry.
 
 **Response:** `200 OK`
 
@@ -384,11 +384,11 @@ Arcane Reader предоставляет REST API для управления п
 
 ### POST /api/projects/:projectId/glossary/:entryId/image
 
-Добавить изображение в галерею записи глоссария.
+Add an image to the glossary entry gallery.
 
 **Request:** `multipart/form-data`
 
-- `image` (file, required) — файл изображения
+- `image` (file, required) — image file
 
 **Response:** `200 OK`
 
@@ -406,7 +406,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### DELETE /api/projects/:projectId/glossary/:entryId/image/:index
 
-Удалить конкретное изображение из галереи по индексу.
+Delete a specific image from the gallery by index.
 
 **Response:** `200 OK`
 
@@ -423,7 +423,7 @@ Arcane Reader предоставляет REST API для управления п
 
 ### DELETE /api/projects/:projectId/glossary/:entryId/image
 
-Удалить все изображения из галереи записи.
+Delete all images from the entry gallery.
 
 **Response:** `200 OK`
 
@@ -440,21 +440,21 @@ Arcane Reader предоставляет REST API для управления п
 
 ### POST /api/projects/:id/export
 
-Экспортировать проект в формат EPUB или FB2.
+Export project to EPUB or FB2 format.
 
 **Request:**
 
 ```json
 {
   "format": "epub",
-  "author": "Переведено Arcane"
+  "author": "Translated by Arcane"
 }
 ```
 
-**Параметры:**
+**Parameters:**
 
-- `format` (required) — `"epub"` или `"fb2"`
-- `author` (optional) — автор для метаданных (по умолчанию: "Переведено Arcane")
+- `format` (required) — `"epub"` or `"fb2"`
+- `author` (optional) — author for metadata (default: "Translated by Arcane")
 
 **Response:** `200 OK`
 
@@ -468,24 +468,24 @@ Arcane Reader предоставляет REST API для управления п
 }
 ```
 
-**Особенности:**
+**Features:**
 
-- Экспортируются только главы со статусом `completed`
-- Главы сортируются по номеру (`number`)
-- Текст преобразуется в HTML (EPUB) или XML (FB2)
-- Файлы сохраняются в `data/exports/` и доступны по URL `/exports/{filename}`
+- Only chapters with `completed` status are exported
+- Chapters are sorted by number (`number`)
+- Text is converted to HTML (EPUB) or XML (FB2)
+- Files are saved in `data/exports/` and accessible via URL `/exports/{filename}`
 
-**Ошибки:**
+**Errors:**
 
-- `400` — Неверный формат (должен быть "epub" или "fb2")
-- `404` — Проект не найден
-- `500` — Нет переведенных глав для экспорта
+- `400` — Invalid format (must be "epub" or "fb2")
+- `404` — Project not found
+- `500` — No translated chapters to export
 
 ---
 
 ## 🔧 Error Responses
 
-Все ошибки возвращаются в формате:
+All errors are returned in the format:
 
 ```json
 {
@@ -505,9 +505,9 @@ Arcane Reader предоставляет REST API для управления п
 
 ---
 
-## 📝 Примеры с curl
+## 📝 curl Examples
 
-### Создать проект
+### Create project
 
 ```bash
 curl -X POST http://localhost:3000/api/projects \
@@ -515,7 +515,7 @@ curl -X POST http://localhost:3000/api/projects \
   -d '{"name": "Test Novel"}'
 ```
 
-### Добавить главу
+### Add chapter
 
 ```bash
 curl -X POST http://localhost:3000/api/projects/{id}/chapters \
@@ -523,13 +523,13 @@ curl -X POST http://localhost:3000/api/projects/{id}/chapters \
   -d '{"title": "Chapter 1", "originalText": "Hello world..."}'
 ```
 
-### Запустить перевод
+### Start translation
 
 ```bash
 curl -X POST http://localhost:3000/api/projects/{projectId}/chapters/{chapterId}/translate
 ```
 
-### Добавить персонажа в глоссарий
+### Add character to glossary
 
 ```bash
 curl -X POST http://localhost:3000/api/projects/{id}/glossary \
@@ -537,15 +537,15 @@ curl -X POST http://localhost:3000/api/projects/{id}/glossary \
   -d '{"type": "character", "original": "John", "gender": "male"}'
 ```
 
-### Экспортировать проект в EPUB
+### Export project to EPUB
 
 ```bash
 curl -X POST http://localhost:3000/api/projects/{id}/export \
   -H "Content-Type: application/json" \
-  -d '{"format": "epub", "author": "Переведено Arcane"}'
+  -d '{"format": "epub", "author": "Translated by Arcane"}'
 ```
 
-### Экспортировать проект в FB2
+### Export project to FB2
 
 ```bash
 curl -X POST http://localhost:3000/api/projects/{id}/export \

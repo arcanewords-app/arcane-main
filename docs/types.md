@@ -1,6 +1,6 @@
 # 🔷 TypeScript Types Reference
 
-Полная документация по типам, используемым в Arcane.
+Complete documentation on types used in Arcane.
 
 ---
 
@@ -9,23 +9,23 @@
 ### Common Types
 
 ```typescript
-// Поддерживаемые языки
+// Supported languages
 type Language = 'ja' | 'zh' | 'ko' | 'en' | 'ru' | 'pl';
 
-// Пол (для склонений)
+// Gender (for declensions)
 type Gender = 'male' | 'female' | 'neutral' | 'unknown';
 
-// Падежные формы
+// Case forms
 interface Declensions {
-  nominative: string;    // кто? что?
-  genitive: string;      // кого? чего?
-  dative: string;        // кому? чему?
-  accusative: string;    // кого? что?
-  instrumental: string;  // кем? чем?
-  prepositional: string; // о ком? о чём?
+  nominative: string;    // who? what?
+  genitive: string;      // whom? what?
+  dative: string;        // to whom? to what?
+  accusative: string;    // whom? what?
+  instrumental: string;  // with whom? with what?
+  prepositional: string; // about whom? about what?
 }
 
-// Чанк текста для обработки
+// Text chunk for processing
 interface TextChunk {
   id: string;
   content: string;
@@ -33,7 +33,7 @@ interface TextChunk {
   tokenCount?: number;
 }
 
-// Конфигурация перевода
+// Translation configuration
 interface TranslationConfig {
   sourceLanguage: Language;
   targetLanguage: Language;
@@ -46,7 +46,7 @@ interface TranslationConfig {
 ### Glossary Types
 
 ```typescript
-// Персонаж
+// Character
 interface Character {
   id: string;
   originalName: string;
@@ -59,7 +59,7 @@ interface Character {
   isMainCharacter: boolean;
 }
 
-// Локация
+// Location
 interface Location {
   id: string;
   originalName: string;
@@ -68,7 +68,7 @@ interface Location {
   type: 'city' | 'country' | 'building' | 'region' | 'world' | 'other';
 }
 
-// Термин
+// Term
 interface Term {
   id: string;
   originalTerm: string;
@@ -78,7 +78,7 @@ interface Term {
   context?: string;
 }
 
-// Глоссарий
+// Glossary
 interface Glossary {
   novelId: string;
   version: number;
@@ -88,7 +88,7 @@ interface Glossary {
   terms: Term[];
 }
 
-// Обновление глоссария
+// Glossary update
 interface GlossaryUpdate {
   newCharacters: Omit<Character, 'id'>[];
   newLocations: Omit<Location, 'id'>[];
@@ -102,7 +102,7 @@ interface GlossaryUpdate {
 ### Agent Types
 
 ```typescript
-// Профиль стиля
+// Style profile
 interface StyleProfile {
   narrativeVoice: 'first-person' | 'third-person' | 'omniscient';
   formalityLevel: 'casual' | 'neutral' | 'formal';
@@ -111,7 +111,7 @@ interface StyleProfile {
   pacing: 'fast' | 'moderate' | 'slow';
 }
 
-// Краткое содержание главы
+// Chapter summary
 interface ChapterSummary {
   chapterNumber: number;
   summary: string;
@@ -120,7 +120,7 @@ interface ChapterSummary {
   location: string;
 }
 
-// Текущий контекст
+// Current context
 interface CurrentContext {
   lastChapterNumber: number;
   recentEvents: string[];
@@ -129,7 +129,7 @@ interface CurrentContext {
   ongoingPlotThreads: string[];
 }
 
-// Полное состояние агента
+// Full agent state
 interface NovelAgentState {
   novelId: string;
   title: string;
@@ -146,7 +146,7 @@ interface NovelAgentState {
   }[];
 }
 
-// Результат анализа
+// Analysis result
 interface AnalysisResult {
   foundCharacters: {
     name: string;
@@ -177,7 +177,7 @@ interface AnalysisResult {
   styleNotes: string;
 }
 
-// Контекст для передачи в стадии
+// Context for passing to stages
 interface AgentContext {
   glossary: Glossary;
   styleProfile: StyleProfile;
@@ -189,10 +189,10 @@ interface AgentContext {
 ### Pipeline Types
 
 ```typescript
-// Тип стадии
+// Stage type
 type StageType = 'analyze' | 'translate' | 'edit';
 
-// Результат стадии
+// Stage result
 interface StageResult<T> {
   stage: StageType;
   success: boolean;
@@ -202,14 +202,14 @@ interface StageResult<T> {
   duration: number; // ms
 }
 
-// Черновик перевода
+// Translation draft
 interface TranslationDraft {
   originalText: string;
   translatedText: string;
   chunkResults: ChunkTranslation[];
 }
 
-// Перевод чанка
+// Chunk translation
 interface ChunkTranslation {
   chunkId: string;
   original: string;
@@ -217,21 +217,21 @@ interface ChunkTranslation {
   notes?: string;
 }
 
-// Отредактированный перевод
+// Edited translation
 interface EditedTranslation {
   finalText: string;
   changes: EditChange[];
   qualityScore?: number;
 }
 
-// Изменение при редактуре
+// Edit change
 interface EditChange {
   before: string;
   after: string;
   reason: string;
 }
 
-// Результат пайплайна
+// Pipeline result
 interface PipelineResult {
   chapterNumber: number;
   originalText: string;
@@ -248,7 +248,7 @@ interface PipelineResult {
   updatedContext: AgentContext;
 }
 
-// Опции пайплайна
+// Pipeline options
 interface PipelineOptions {
   skipAnalysis?: boolean;
   skipEditing?: boolean;
@@ -260,13 +260,13 @@ interface PipelineOptions {
 ### Provider Types
 
 ```typescript
-// Сообщение для LLM
+// Message for LLM
 interface Message {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
-// Опции запроса
+// Request options
 interface CompletionOptions {
   temperature?: number;
   maxTokens?: number;
@@ -274,7 +274,7 @@ interface CompletionOptions {
   responseFormat?: { type: 'json_object' | 'text' };
 }
 
-// Результат запроса
+// Request result
 interface CompletionResult {
   content: string;
   tokensUsed: {
@@ -285,7 +285,7 @@ interface CompletionResult {
   finishReason: 'stop' | 'length' | 'content_filter';
 }
 
-// Конфигурация провайдера
+// Provider configuration
 interface LLMProviderConfig {
   apiKey: string;
   model: string;
@@ -293,7 +293,7 @@ interface LLMProviderConfig {
   timeout?: number;
 }
 
-// Интерфейс провайдера
+// Provider interface
 interface ILLMProvider {
   complete(messages: Message[], options?: CompletionOptions): Promise<CompletionResult>;
   getModelInfo(): { name: string; maxTokens: number };
@@ -307,7 +307,7 @@ interface ILLMProvider {
 ### Database Types
 
 ```typescript
-// Проект
+// Project
 interface Project {
   id: string;
   name: string;
@@ -320,7 +320,7 @@ interface Project {
   updatedAt: string;
 }
 
-// Глава
+// Chapter
 interface Chapter {
   id: string;
   number: number;
@@ -336,7 +336,7 @@ interface Chapter {
   };
 }
 
-// Запись глоссария (упрощённая для UI)
+// Glossary entry (simplified for UI)
 interface GlossaryEntry {
   id: string;
   type: 'character' | 'location' | 'term';
@@ -351,23 +351,23 @@ interface GlossaryEntry {
     instrumental: string;
     prepositional: string;
   };
-  description?: string;        // Описание сущности (из анализа или вручную)
-  notes?: string;              // Пользовательские заметки (отдельно от description)
-  firstAppearance?: number;     // Номер главы первого упоминания
-  imageUrls?: string[];         // Галерея изображений
-  autoDetected?: boolean;       // Автоматически определена при анализе
+  description?: string;        // Entity description (from analysis or manual)
+  notes?: string;              // User notes (separate from description)
+  firstAppearance?: number;     // Chapter number of first mention
+  imageUrls?: string[];         // Image gallery
+  autoDetected?: boolean;       // Automatically detected during analysis
   // Legacy support
-  imageUrl?: string;           // Старое поле (мигрирует в imageUrls)
+  imageUrl?: string;           // Old field (migrates to imageUrls)
 }
 
-// Настройки проекта
+// Project settings
 interface ProjectSettings {
   model: string;
   temperature: number;
   skipEditing: boolean;
 }
 
-// Схема базы данных
+// Database schema
 interface DatabaseSchema {
   projects: Project[];
   settings: {
@@ -379,7 +379,7 @@ interface DatabaseSchema {
 ### Config Types
 
 ```typescript
-// Конфигурация приложения
+// Application configuration
 interface AppConfig {
   openai: {
     apiKey: string;
@@ -403,7 +403,7 @@ interface AppConfig {
 ### Client Types (src/client/types/index.ts)
 
 ```typescript
-// Статус системы
+// System status
 interface SystemStatus {
   status: 'ok' | 'error';
   ai: {
@@ -416,7 +416,7 @@ interface SystemStatus {
   };
 }
 
-// Проект (для списка)
+// Project (for list)
 interface ProjectListItem {
   id: string;
   name: string;
@@ -424,34 +424,34 @@ interface ProjectListItem {
   translatedCount: number;
 }
 
-// Параграф главы
+// Chapter paragraph
 interface Paragraph {
   id: string;
   original: string;
   translated?: string;
 }
 
-// Тип записи глоссария
+// Glossary entry type
 type GlossaryEntryType = 'character' | 'location' | 'term';
 
-// Запись глоссария
+// Glossary entry
 interface GlossaryEntry {
   id: string;
   type: GlossaryEntryType;
   original: string;
   translated: string;
   gender?: 'male' | 'female' | 'neutral' | 'unknown';
-  description?: string;        // Описание сущности (из анализа или вручную)
-  notes?: string;              // Пользовательские заметки (отдельно от description)
-  firstAppearance?: number;     // Номер главы первого упоминания
-  imageUrls?: string[];         // Галерея изображений
-  autoDetected?: boolean;       // Автоматически определена при анализе
+  description?: string;        // Entity description (from analysis or manual)
+  notes?: string;              // User notes (separate from description)
+  firstAppearance?: number;     // Chapter number of first mention
+  imageUrls?: string[];         // Image gallery
+  autoDetected?: boolean;       // Automatically detected during analysis
   declensions?: Declensions;
   // Legacy support
-  imageUrl?: string;           // Старое поле (мигрирует в imageUrls)
+  imageUrl?: string;           // Old field (migrates to imageUrls)
 }
 
-// Настройки проекта
+// Project settings
 interface ProjectSettings {
   model: string;
   temperature: number;
@@ -462,10 +462,10 @@ interface ProjectSettings {
   };
 }
 
-// Статус главы
+// Chapter status
 type ChapterStatus = 'pending' | 'translating' | 'completed' | 'error';
 
-// Глава
+// Chapter
 interface Chapter {
   id: string;
   number: number;
@@ -482,7 +482,7 @@ interface Chapter {
   };
 }
 
-// Полный проект
+// Full project
 interface Project {
   id: string;
   name: string;
@@ -498,9 +498,9 @@ interface Project {
 
 ---
 
-## Использование типов
+## Type Usage
 
-### Импорт из arcane-engine
+### Import from arcane-engine
 
 ```typescript
 import type {
@@ -543,7 +543,7 @@ import type {
 } from 'arcane-engine';
 ```
 
-### Импорт из arcane-reader (сервер)
+### Import from arcane-reader (server)
 
 ```typescript
 import type {
@@ -557,7 +557,7 @@ import type {
 import type { AppConfig } from './config.js';
 ```
 
-### Импорт из arcane-reader (клиент)
+### Import from arcane-reader (client)
 
 ```typescript
 import type {
@@ -573,4 +573,3 @@ import type {
   Declensions,
 } from './types';
 ```
-

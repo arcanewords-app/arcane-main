@@ -1,22 +1,22 @@
 # Arcane - AI Novel Translator
 
-## 📋 Przegląd projektu
+## 📋 Project Overview
 
-Arcane to inteligentny tłumacz powieści wykorzystujący AI z 3-etapowym potokiem przetwarzania i agentem kontekstowym dla zachowania spójności tłumaczenia.
-
----
-
-## 🏗️ Architektura modułów
-
-| Moduł | Przeznaczenie |
-|-------|---------------|
-| **arcane-core** | Jądro systemu — wspólne typy, narzędzia, konfiguracja, interfejsy |
-| **arcane-engine** | Silnik tłumaczenia — prompty, praca z AI API, słowniki, agent |
-| **arcane-reader** | Frontend/UI — czytanie, ładowanie plików, zarządzanie projektami |
+Arcane is an intelligent AI-powered novel translator with a 3-stage processing pipeline and a context agent for maintaining translation consistency.
 
 ---
 
-## 🎯 3-etapowy potok tłumaczenia
+## 🏗️ Module Architecture
+
+| Module | Purpose |
+|--------|---------|
+| **arcane-core** | System core — shared types, utilities, configuration, interfaces |
+| **arcane-engine** | Translation engine — prompts, AI API integration, glossaries, agent |
+| **arcane-reader** | Frontend/UI — reading, file loading, project management |
+
+---
+
+## 🎯 3-Stage Translation Pipeline
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -27,29 +27,29 @@ Arcane to inteligentny tłumacz powieści wykorzystujący AI z 3-etapowym potoki
 │       │                                                         │
 │       ▼                                                         │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │  STAGE 1: AGENT (Analiza)                               │   │
-│  │  • Ekstrakcja postaci, lokacji, terminów                │   │
-│  │  • Określenie stylu autora                              │   │
-│  │  • Tworzenie/aktualizacja słownika                      │   │
-│  │  • Analiza kontekstu rozdziału                          │   │
+│  │  STAGE 1: AGENT (Analysis)                               │   │
+│  │  • Extract characters, locations, terms                  │   │
+│  │  • Determine author's style                             │   │
+│  │  • Create/update glossary                               │   │
+│  │  • Analyze chapter context                               │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │       │                                                         │
-│       ▼  [Słownik + Kontekst]                                  │
+│       ▼  [Glossary + Context]                                  │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │  STAGE 2: TRANSLATOR (Dokładne tłumaczenie)             │   │
-│  │  • Tłumaczenie z uwzględnieniem słownika                │   │
-│  │  • Prawidłowa odmiana imion                             │   │
-│  │  • Zachowanie stylistyki                                │   │
-│  │  • Kontekstowe tłumaczenie                              │   │
+│  │  STAGE 2: TRANSLATOR (Accurate translation)             │   │
+│  │  • Translate with glossary consideration                │   │
+│  │  • Proper name declensions                               │   │
+│  │  • Preserve stylistics                                  │   │
+│  │  • Contextual translation                                │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │       │                                                         │
-│       ▼  [Wersja robocza]                                      │
+│       ▼  [Draft version]                                      │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │  STAGE 3: EDITOR (Redakcja)                             │   │
-│  │  • Obróbka literacka                                    │   │
-│  │  • Sprawdzenie spójności                                │   │
-│  │  • Poprawienie nienaturalnych fraz                      │   │
-│  │  • Ostateczna korekta                                   │   │
+│  │  STAGE 3: EDITOR (Editing)                              │   │
+│  │  • Literary refinement                                   │   │
+│  │  • Consistency check                                     │   │
+│  │  • Fix unnatural phrases                                 │   │
+│  │  • Final proofreading                                    │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │       │                                                         │
 │       ▼                                                         │
@@ -60,7 +60,7 @@ Arcane to inteligentny tłumacz powieści wykorzystujący AI z 3-etapowym potoki
 
 ---
 
-## 📁 Struktura projektu
+## 📁 Project Structure
 
 ### arcane-core
 
@@ -77,9 +77,9 @@ arcane-core/
 │   │   ├── llm-provider.ts   # ILLMProvider interface
 │   │   └── storage.ts        # IStorage interface
 │   ├── utils/
-│   │   ├── chunker.ts        # Podział tekstu na fragmenty
-│   │   ├── text-utils.ts     # Narzędzia tekstowe
-│   │   └── logger.ts         # Logowanie
+│   │   ├── chunker.ts        # Text chunking
+│   │   ├── text-utils.ts     # Text utilities
+│   │   └── logger.ts         # Logging
 │   └── index.ts
 ├── package.json
 └── tsconfig.json
@@ -91,32 +91,32 @@ arcane-core/
 arcane-engine/
 ├── src/
 │   ├── agents/
-│   │   └── novel-agent.ts       # Agent powieści (pamięć, słownik)
+│   │   └── novel-agent.ts       # Novel agent (memory, glossary)
 │   ├── stages/
-│   │   ├── stage-1-analyze.ts   # Etap analizy
-│   │   ├── stage-2-translate.ts # Etap tłumaczenia
-│   │   └── stage-3-edit.ts      # Etap redakcji
+│   │   ├── stage-1-analyze.ts   # Analysis stage
+│   │   ├── stage-2-translate.ts # Translation stage
+│   │   └── stage-3-edit.ts      # Editing stage
 │   ├── prompts/
 │   │   ├── system/
-│   │   │   ├── analyzer.ts      # Systemowy prompt dla analizy
-│   │   │   ├── translator.ts    # Systemowy prompt dla tłumaczenia
-│   │   │   └── editor.ts        # Systemowy prompt dla redakcji
+│   │   │   ├── analyzer.ts      # System prompt for analysis
+│   │   │   ├── translator.ts    # System prompt for translation
+│   │   │   └── editor.ts        # System prompt for editing
 │   │   └── templates/
-│   │       ├── analyze.ts       # Szablon zapytania analizy
-│   │       ├── translate.ts     # Szablon zapytania tłumaczenia
-│   │       └── edit.ts          # Szablon zapytania redakcji
+│   │       ├── analyze.ts       # Analysis query template
+│   │       ├── translate.ts    # Translation query template
+│   │       └── edit.ts          # Editing query template
 │   ├── providers/
 │   │   ├── openai.ts            # OpenAI provider
 │   │   ├── anthropic.ts         # Claude provider
-│   │   └── ollama.ts            # Lokalne LLM
+│   │   └── ollama.ts            # Local LLM
 │   ├── glossary/
-│   │   ├── glossary-manager.ts  # Zarządzanie słownikiem
-│   │   └── declension.ts        # Odmiana (dla rosyjskiego/polskiego)
+│   │   ├── glossary-manager.ts  # Glossary management
+│   │   └── declension.ts        # Declension (for Russian/Polish)
 │   ├── pipeline/
-│   │   └── translation-pipeline.ts  # Orkiestracja 3 etapów
+│   │   └── translation-pipeline.ts  # 3-stage orchestration
 │   ├── storage/
-│   │   ├── project-storage.ts   # Przechowywanie projektu
-│   │   └── cache.ts             # Cache tłumaczeń
+│   │   ├── project-storage.ts   # Project storage
+│   │   └── cache.ts             # Translation cache
 │   └── index.ts
 ├── package.json
 └── tsconfig.json
@@ -128,23 +128,23 @@ arcane-engine/
 arcane-reader/
 ├── src/
 │   ├── parsers/
-│   │   ├── txt-parser.ts        # Parser .txt
-│   │   └── epub-parser.ts       # (przyszłość) Parser .epub
+│   │   ├── txt-parser.ts        # .txt parser
+│   │   └── epub-parser.ts       # (future) .epub parser
 │   ├── cli/
 │   │   ├── commands/
-│   │   │   ├── translate.ts     # Komenda tłumaczenia
-│   │   │   ├── glossary.ts      # Zarządzanie słownikiem
-│   │   │   └── project.ts       # Zarządzanie projektem
+│   │   │   ├── translate.ts     # Translation command
+│   │   │   ├── glossary.ts      # Glossary management
+│   │   │   └── project.ts       # Project management
 │   │   └── index.ts
-│   ├── api/                     # (przyszłość) REST API
-│   └── web/                     # (przyszłość) Web UI
+│   ├── api/                     # (future) REST API
+│   └── web/                     # (future) Web UI
 ├── package.json
 └── tsconfig.json
 ```
 
 ---
 
-## 🧠 Agent powieści
+## 🧠 Novel Agent
 
 ```typescript
 interface NovelAgent {
@@ -194,29 +194,28 @@ interface Character {
 
 ---
 
-## 📋 Plan realizacji
+## 📋 Implementation Plan
 
-| Etap | Moduł | Zadania | Priorytet |
-|------|-------|---------|-----------|
-| 1 | core | Podstawowe typy, interfejsy | 🔴 Wysoki |
-| 2 | engine | LLM provider (OpenAI) | 🔴 Wysoki |
-| 3 | engine | Stage 1 - Analizator | 🔴 Wysoki |
-| 4 | engine | Słownik + odmiana | 🔴 Wysoki |
-| 5 | engine | Stage 2 - Tłumacz | 🔴 Wysoki |
-| 6 | engine | Stage 3 - Redaktor | 🟡 Średni |
-| 7 | reader | TXT parser | 🟡 Średni |
-| 8 | reader | CLI interfejs | 🟡 Średni |
-| 9 | engine | Cache | 🟢 Niski |
-| 10 | reader | Web UI | 🟢 Niski |
+| Stage | Module | Tasks | Priority |
+|------|--------|-------|----------|
+| 1 | core | Basic types, interfaces | 🔴 High |
+| 2 | engine | LLM provider (OpenAI) | 🔴 High |
+| 3 | engine | Stage 1 - Analyzer | 🔴 High |
+| 4 | engine | Glossary + declension | 🔴 High |
+| 5 | engine | Stage 2 - Translator | 🔴 High |
+| 6 | engine | Stage 3 - Editor | 🟡 Medium |
+| 7 | reader | TXT parser | 🟡 Medium |
+| 8 | reader | CLI interface | 🟡 Medium |
+| 9 | engine | Cache | 🟢 Low |
+| 10 | reader | Web UI | 🟢 Low |
 
 ---
 
-## 🔧 Stack technologiczny
+## 🔧 Technology Stack
 
 - **Runtime**: Node.js
-- **Język**: TypeScript
+- **Language**: TypeScript
 - **AI Providers**: OpenAI, Anthropic Claude, Ollama
-- **Storage**: JSON files (MVP), SQLite/PostgreSQL (przyszłość)
+- **Storage**: JSON files (MVP), SQLite/PostgreSQL (future)
 - **CLI**: Commander.js
-- **Web**: React + Vite (przyszłość)
-
+- **Web**: React + Vite (future)

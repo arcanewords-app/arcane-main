@@ -1,22 +1,22 @@
-# 📝 Системные промпты
+# 📝 System Prompts
 
-Документация по системным промптам, используемым в 3-стадийном пайплайне перевода.
-
----
-
-## Обзор стадий
-
-| Стадия | Файл | Назначение |
-|--------|------|------------|
-| Stage 1 | `analyzer.ts` | Анализ текста, извлечение сущностей |
-| Stage 2 | `translator.ts` | Точный перевод с глоссарием |
-| Stage 3 | `editor.ts` | Полировка и улучшение качества |
+Documentation on system prompts used in the 3-stage translation pipeline.
 
 ---
 
-## Stage 1: Analyzer (Анализатор)
+## Stage Overview
 
-### Системный промпт
+| Stage | File | Purpose |
+|-------|------|---------|
+| Stage 1 | `analyzer.ts` | Text analysis, entity extraction |
+| Stage 2 | `translator.ts` | Accurate translation with glossary |
+| Stage 3 | `editor.ts` | Polishing and quality improvement |
+
+---
+
+## Stage 1: Analyzer
+
+### System Prompt
 
 ```
 You are an expert literary analyst specializing in novel analysis for translation preparation.
@@ -30,7 +30,7 @@ Your task is to analyze the provided chapter/text and extract:
 You must output a structured JSON analysis that will be used by the translator.
 ```
 
-### Формат вывода
+### Output Format
 
 ```json
 {
@@ -67,7 +67,7 @@ You must output a structured JSON analysis that will be used by the translator.
 }
 ```
 
-### Функция создания промпта
+### Prompt Creation Function
 
 ```typescript
 createAnalyzerPrompt(
@@ -80,9 +80,9 @@ createAnalyzerPrompt(
 
 ---
 
-## Stage 2: Translator (Переводчик)
+## Stage 2: Translator
 
-### Системный промпт
+### System Prompt
 
 ```
 You are an expert literary translator specializing in novel translation.
@@ -94,25 +94,25 @@ Your task is to produce an accurate, natural-sounding translation that:
 4. Sounds natural: The translation should read like native literature
 ```
 
-### Правила перевода
+### Translation Rules
 
-#### Имена и термины
-- Использовать ТОЧНО переводы из глоссария
-- Применять правильные грамматические формы (склонения)
-- Для русского: использовать правильные падежные окончания
+#### Names and Terms
+- Use EXACT translations from glossary
+- Apply correct grammatical forms (declensions)
+- For Russian: use correct case endings
 
-#### Сохранение стиля
-- Сохранять структуру предложений когда возможно
-- Сохранять абзацы и форматирование
-- Поддерживать консистентный голос повествования
-- Сохранять стиль диалогов
+#### Style Preservation
+- Preserve sentence structure when possible
+- Preserve paragraphs and formatting
+- Maintain consistent narrative voice
+- Preserve dialogue style
 
-#### Культурная адаптация
-- Адаптировать культурные отсылки при необходимости
-- Сохранять атмосферу оригинального сеттинга
-- Правильно обрабатывать обращения и титулы
+#### Cultural Adaptation
+- Adapt cultural references when necessary
+- Preserve original setting atmosphere
+- Correctly handle forms of address and titles
 
-### Функция создания промпта
+### Prompt Creation Function
 
 ```typescript
 createTranslatorPrompt(
@@ -123,7 +123,7 @@ createTranslatorPrompt(
 ): string
 ```
 
-### Секция глоссария
+### Glossary Section
 
 ```typescript
 createGlossaryPromptSection(
@@ -133,11 +133,11 @@ createGlossaryPromptSection(
 ): string
 ```
 
-Пример вывода:
+Example output:
 ```
 ### Characters
-- John → Джон (род: Джона, дат: Джону)
-- Mary → Мария (род: Марии, дат: Марии)
+- John → Джон (gen: Джона, dat: Джону)
+- Mary → Мария (gen: Марии, dat: Марии)
 
 ### Locations
 - Crystal Palace → Хрустальный дворец
@@ -150,9 +150,9 @@ createGlossaryPromptSection(
 
 ---
 
-## Stage 3: Editor (Редактор)
+## Stage 3: Editor
 
-### Системный промпт
+### System Prompt
 
 ```
 You are an expert literary editor specializing in translated fiction.
@@ -164,31 +164,31 @@ Your task is to polish the provided translation to achieve:
 4. Readability: Fix any awkward or unnatural phrasings
 ```
 
-### Что исправлять
+### What to Fix
 
-- Неестественные конструкции "кальки" с оригинала
-- Неподходящий выбор слов или словосочетаний
-- Непоследовательный тон или стиль
-- Повторяющуюся лексику
-- Грамматические и пунктуационные ошибки
+- Unnatural "calque" constructions from original
+- Inappropriate word or phrase choices
+- Inconsistent tone or style
+- Repetitive vocabulary
+- Grammatical and punctuation errors
 
-### Что сохранять
+### What to Preserve
 
-- Оригинальный смысл и намерение
-- Уникальный голос и стиль автора
-- Речевые паттерны персонажей
-- Эмоциональное воздействие сцен
-- Все имена собственные и установленные переводы
+- Original meaning and intent
+- Unique author's voice and style
+- Character speech patterns
+- Emotional impact of scenes
+- All proper names and established translations
 
-### Чего НЕ делать
+### What NOT to Do
 
-- Добавлять новый контент
-- Удалять важные детали
-- Менять имена персонажей
-- Изменять сюжет
-- Чрезмерно локализовывать
+- Add new content
+- Remove important details
+- Change character names
+- Alter plot
+- Over-localize
 
-### Функция создания промпта
+### Prompt Creation Function
 
 ```typescript
 createEditorPrompt(
@@ -199,7 +199,7 @@ createEditorPrompt(
 ): string
 ```
 
-### Проверка качества
+### Quality Check
 
 ```typescript
 QUALITY_CHECK_PROMPT = `
@@ -222,11 +222,11 @@ Output JSON:
 
 ---
 
-## Кастомизация промптов
+## Prompt Customization
 
-Промпты можно модифицировать для специфических нужд:
+Prompts can be modified for specific needs:
 
-### 1. Изменение стиля перевода
+### 1. Changing Translation Style
 
 ```typescript
 const customTranslator = TRANSLATOR_SYSTEM_PROMPT + `
@@ -239,7 +239,7 @@ const customTranslator = TRANSLATOR_SYSTEM_PROMPT + `
 `;
 ```
 
-### 2. Добавление жанровых особенностей
+### 2. Adding Genre-Specific Features
 
 ```typescript
 const fantasyPrompt = ANALYZER_SYSTEM_PROMPT + `
@@ -254,7 +254,7 @@ Pay special attention to:
 `;
 ```
 
-### 3. Настройка для конкретной новеллы
+### 3. Novel-Specific Configuration
 
 ```typescript
 const novelSpecificPrompt = `
@@ -269,9 +269,9 @@ This is a cultivation novel where:
 
 ---
 
-## Примеры использования
+## Usage Examples
 
-### Полный пайплайн
+### Full Pipeline
 
 ```typescript
 import {
@@ -303,4 +303,3 @@ const edited = await llm.complete([
   { role: 'user', content: translation },
 ]);
 ```
-
