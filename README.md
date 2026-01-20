@@ -18,14 +18,29 @@
 
 ## ✨ Features
 
+### Core Translation
 - **3-Stage AI Pipeline** — Analyze → Translate → Edit with context awareness
 - **Smart Glossary** — Consistent character/location names across chapters
 - **Russian Morphology** — Automatic noun declensions (6 grammatical cases)
 - **Context Agent** — Maintains story context between chapters
-- **Modern Web UI** — Preact SPA with hot reload, ~15KB gzip bundle
-- **Export to EPUB/FB2** — Generate e-book files for reading apps
+- **Stage-Specific Models** — Different AI models for analysis, translation, and editing stages
+- **Configurable Creativity** — Temperature control for translation quality
+
+### User Interface
+- **Modern Dashboard** — Kindle-like project grid with cover images
+- **Project Types** — Support for books (EPUB/FB2) and plain text
+- **Cover Images** — Upload and manage project covers
+- **Responsive Design** — Mobile, tablet, and desktop layouts
+- **Sidebar Navigation** — Context-aware sidebar for chapter navigation
 - **Reading Mode** — Full-screen reading interface for translated chapters
-- **Monorepo** — Reusable engine package + web application
+- **Original Reading Mode** — Read-only mode for projects without translation
+
+### Data & Export
+- **Supabase Integration** — PostgreSQL database with Row Level Security
+- **User Authentication** — Email/password with email confirmation
+- **Export to EPUB/FB2** — Generate e-book files for reading apps
+- **State Management** — @preact/signals for efficient caching
+- **Client-Side Routing** — preact-router for SPA navigation
 
 ---
 
@@ -45,9 +60,12 @@ arcane/
 └── arcane-reader/          # 📖 Web UI + API server
     └── src/
         ├── server.ts       # Express REST API
-        ├── storage/        # LowDB persistence
+        ├── services/       # Supabase integration
+        ├── middleware/     # Authentication middleware
         └── client/         # Preact SPA
+            ├── pages/      # Route pages (Dashboard, ProjectPage, ChapterPage)
             ├── components/ # UI components
+            ├── store/      # State management (@preact/signals)
             ├── api/        # Typed API client
             └── styles/     # CSS with variables
 ```
@@ -60,6 +78,7 @@ arcane/
 
 - Node.js 18+
 - OpenAI API key
+- Supabase account and project
 
 ### Installation
 
@@ -71,9 +90,16 @@ cd arcane
 # Install dependencies
 npm install
 
-# Configure API key
+# Configure environment
 cp arcane-reader/env.example.txt arcane-reader/.env
-# Edit .env and add: OPENAI_API_KEY=sk-...
+# Edit .env and add:
+#   OPENAI_API_KEY=sk-...
+#   SUPABASE_URL=https://your-project.supabase.co
+#   SUPABASE_ANON_KEY=your-anon-key
+#   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Run database migrations
+# See arcane-reader/migrations/README.md
 
 # Build engine
 npm run build
@@ -83,6 +109,13 @@ npm run dev
 
 # Open http://localhost:3000
 ```
+
+### Database Setup
+
+1. Create a Supabase project at https://supabase.com
+2. Run migration scripts from `arcane-reader/migrations/`
+3. Configure Row Level Security (RLS) policies
+4. Set environment variables in `.env`
 
 ---
 
@@ -116,11 +149,15 @@ const result = await pipeline.translate(chapterText, {
 
 Web application with:
 
-- Project & chapter management
-- Drag-n-drop file upload
-- Smart glossary with auto-declensions
-- Side-by-side original/translation view
-- Translation progress tracking
+- **Dashboard** — Main page with project grid (Kindle-like layout)
+- **Project Management** — Create, edit, delete projects (books/text)
+- **Chapter Management** — Upload, view, and edit chapters
+- **Smart Glossary** — Auto-declensions with image support
+- **Translation Settings** — Configure AI models, creativity, pipeline stages
+- **Reading Modes** — Translation mode and original-only reading mode
+- **Cover Images** — Upload and manage project covers
+- **Export** — Generate EPUB/FB2 files
+- **Authentication** — User accounts with email confirmation
 
 ---
 
@@ -146,11 +183,14 @@ Web application with:
 
 | Layer | Technology |
 |-------|------------|
-| **Frontend** | Preact, Vite, TypeScript, CSS Variables |
+| **Frontend** | Preact, Vite, TypeScript, CSS Variables, preact-router |
+| **State Management** | @preact/signals |
 | **Backend** | Node.js, Express, TypeScript |
-| **Database** | LowDB (JSON file) |
-| **AI** | OpenAI GPT-4, Custom Prompts |
+| **Database** | Supabase (PostgreSQL with RLS) |
+| **Authentication** | Supabase Auth |
+| **AI** | OpenAI GPT-4/5, Custom Prompts |
 | **Build** | npm workspaces, Vite |
+| **File Upload** | Multer, FormData |
 
 ---
 
@@ -163,6 +203,33 @@ Detailed documentation in [`/docs`](./docs/):
 - [API Reference](./docs/api.md) — REST endpoints
 - [Prompts Guide](./docs/prompts.md) — System prompts
 - [Glossary Guide](./docs/glossary.md) — Declensions & terminology
+- [Types Reference](./docs/types.md) — TypeScript types
+
+## 🔐 Authentication & Security
+
+- **User Accounts** — Email/password registration and login
+- **Email Confirmation** — Required for account activation
+- **Row Level Security** — Supabase RLS ensures data isolation
+- **JWT Tokens** — Secure authentication tokens
+- **Protected Routes** — All API endpoints require authentication
+
+## 📱 User Interface
+
+### Pages
+
+- **Dashboard (`/`)** — Main page with project grid, search, and filters
+- **Project Page (`/projects/:id`)** — Project information, settings, chapters list
+- **Chapter Page (`/projects/:id/chapters/:chapterId`)** — Chapter view and editing
+- **Reading Mode (`/projects/:id/chapters/:chapterId/reading`)** — Full-screen reading
+
+### Features
+
+- **Responsive Design** — Mobile-first approach with breakpoints for tablet/desktop
+- **Project Cards** — Cover images, progress bars, metadata
+- **Sidebar Navigation** — Context-aware sidebar for chapters and project navigation
+- **Settings Modal** — Centralized project settings (AI models, creativity, stages)
+- **Glossary Modal** — Manage glossary entries with images
+- **Loading States** — Proper loading indicators and error handling
 
 ---
 
